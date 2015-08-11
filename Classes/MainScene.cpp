@@ -1,6 +1,6 @@
 ﻿//cocos_test.hっていうヘッダーファイルを読む
 #include "MainScene.h"
-
+#include "SimpleAudioEngine.h"
 //名前空間cocos2dを使うという宣言
 USING_NS_CC;
 
@@ -12,7 +12,7 @@ MainScene::MainScene()
 	,_bullet(nullptr)
 
 {
-
+	shotCount = 0;
 
 }
 //MainSceneのデストラクタ
@@ -55,8 +55,40 @@ void MainScene::update(float dt) {
 	const int BSPEED = 15;
 	this->setPosition(this->getPosition() + _Bvelocity * BSPEED);
 
+	Vec2 kawazPosition = _player->getPosition();
+
+	auto winSize = Director::getInstance()->getWinSize();
+
+	if (kawazPosition.x <= 0)
+	{
+		_velocity.x = 0;
+		_player->setPositionX(0);
+	}
+	else if (kawazPosition.x >= winSize.width)
+	{
+		_velocity.x = 0;
+		_player->setPositionX(winSize.width);
+	}
+
+	if (kawazPosition.y <= 0)
+	{
+		_velocity.y = 0;
+		_player->setPositionY(0);
+	}
+	else if (kawazPosition.y >= winSize.height)
+	{
+		_velocity.y = 0;
+		_player->setPositionY(winSize.height);
+	}
 
 }
+
+void MainScene::onEnterTransitionDidFinish()
+{
+	Layer::onEnterTransitionDidFinish();
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("shooting_loop.wav", true);
+}
+
 // tlue falseをとるboolという型のMainSceneクラスのinitという関数を作る
 bool MainScene::init()
 {
@@ -66,7 +98,7 @@ bool MainScene::init()
 		return false;
 	}
 	//Stageクラスのポインタ変数stageを作る
-	auto stage = Stage::create();	
+	auto stage = Stage::create();
 	//MainSceneの子にstageを加える
 	this->addChild(stage);
 	//MainSceneで_stageにstageをセットする
@@ -91,22 +123,50 @@ bool MainScene::init()
 	//詳細よくわからない
 	keyboardListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event *event) {
 
+		//Playerクラスのポインタ変数myBulletを作る
+		auto myBullet = Bullet::create();
+		//もし押されたキーがスペースキーだったら
+		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
+
+			//Playerクラスのポインタ変数myBulletを作る
+			auto myBullet = Bullet::create();
+			//myBulletをkawaztanの現在位置にセットする
+			myBullet->setPosition(_player->getPosition());
+			//MainSceneの子にmyBulletを加える
+			this->addChild(myBullet);
+			//MainSceneでsetBulletにmyBulletをセットする
+			this->setBullet(myBullet);
+			//取得したmyBulletのテクスチャに対して設定を与えている
+			myBullet->getTexture()->setAliasTexParameters();
+			//Shot()関数を走らせる
+			_bullet->Shot();
+			//cocos2d::Spriteが格納できるポインタ配列（？）_bulletsに弾を生成
+			_bullet->_bullets.pushBack(myBullet);
+			log("%i", (int)_bullet->_bullets.size());
+			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("shot_se.wav");
+
+		}
+
 
 		//もし押されたキーが←だったら
 		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
 			//X方向の速度を-1にする
 			_velocity.x = -1;
 
+
 		}
 		//そうではなくもし、キーが→だったら
 		else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
 			//X方向の速度を1にする
 			_velocity.x = 1;
+
 		}
 		//もし押されたキーが↑だったら
 		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW) {
+
 			//Y方向の速度を1にする
 			_velocity.y = 1;
+			
 			//playAnimation(int index)の変数indexに1を代入
 			//上方向へのアニメーションを再生
 			_player->playAnimation(1);
@@ -119,25 +179,6 @@ bool MainScene::init()
 			//playAnimation(int index)の変数indexに2を代入
 			//下方向へのアニメーションを再生
 			_player->playAnimation(2);
-		}
-		//もし押されたキーがスペースキーだったら
-		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
-			//Playerクラスのポインタ変数myBulletを作る
-			auto myBullet = Bullet::create();
-			//myBulletをkawaztanの現在位置にセットする
-			myBullet->setPosition(_player->getPosition());
-			//MainSceneの子にmyBulletを加える
-			this->addChild(myBullet);
-			//MainSceneでsetBulletにmyBulletをセットする
-			this->setBullet(myBullet);
-			//取得したmyBulletのテクスチャに対して設定を与えている
-			myBullet->getTexture()->setAliasTexParameters();
-
-			//Shot()関数を走らせる
-			_bullet->Shot();
-			//cocos2d::Spriteが格納できるポインタ配列（？）_bulletsに弾を生成
-			_bullet->_bullets.pushBack(myBullet);
-
 		}
 	};
 

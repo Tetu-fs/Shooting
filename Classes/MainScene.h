@@ -40,6 +40,10 @@ public:
 
 	// void型のupdate(float dt)という関数の宣言　overrideはおまじない。
 	void update(float dt) override;
+	//　void型の長い名前の関数の宣言
+	void onEnterTransitionDidFinish() override;
+	
+	int shotCount;
 
 	//stageを例にすると、Stage*という型をつくり、MainSceneクラスのprivate変数_stageを作り、getStage/setStageをつくる
 	//getStageは_stageを取得し、setStageは_stageを書き換えられる

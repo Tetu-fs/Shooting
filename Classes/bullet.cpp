@@ -50,7 +50,7 @@ void Bullet::Shot() {
 	Banimation->setDelayPerUnit(0.05);
 	auto Banimate = RepeatForever::create(Animate::create(Banimation));
 	this->runAction(Banimate);
-
+	
 	//’e‚ÌX•ûŒü‚Ì‘¬“x‚ð1‚É‚·‚é
 	_Bvelocity.x = 1;
 
