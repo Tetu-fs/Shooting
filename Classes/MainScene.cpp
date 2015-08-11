@@ -75,14 +75,10 @@ bool MainScene::init()
 	//kawaztanの表示サイズを2倍にする
 	kawaztan->setScale(2.0f);
 
-	//MainSceneをマイフレーム更新する
+	//MainSceneを毎フレーム更新する
 	this->scheduleUpdate();
 
-	//Bulletクラスのポインタ変数bulletを作る
-	auto bullet = Bullet::create();
-	//kawaztanの子にbulletを加える
-	kawaztan->addChild(bullet);
-	//_bullets.push_back(bullet);
+
 
 	//初期化処理
 	return true;

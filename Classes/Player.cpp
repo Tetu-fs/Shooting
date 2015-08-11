@@ -26,14 +26,19 @@ void Player::update(float dt)
 	//自身の位置を、現在地＋ベクトル＊SPEEDの値にする
 	this->setPosition(this->getPosition() + _velocity * SPEED);
 
+
 	_Bvelocity.normalize();
 	const int BSPEED = 15;
 	this->setPosition(this->getPosition() + _Bvelocity * BSPEED);
+
+
 }
 
 //bool型のPlayer::init()関数を宣言
 bool Player::init()
 {
+	_bullets = Vector<Sprite*>();
+	int bulletCount = 0;
 	//もしkawaz_shoothing.pngが見つからなかったら
 	if (!Sprite::initWithFile("kawaz_shooting.png"))
 	{
@@ -77,9 +82,9 @@ bool Player::init()
 		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
 			//Shot()関数を走らせる
 			Shot();
-			//cocos2d::Spriteが格納できる配列_bulletsの終わりに無を挿入する
-			//やりたいこととしては弾を記録しておきたいのだがやり方がわからないのでコメントアウト
-			//_bullets.pushBack();
+			//cocos2d::Spriteが格納できるポインタ配列（？）_bulletsに弾を生成
+			_bullets.pushBack(Sprite::create());
+			_Bvelocity.x = 1;
 		}
 	};
 
@@ -225,6 +230,6 @@ void Player::Shot() {
 	this->runAction(Banimate);
 
 	//弾のX方向の速度を1にする
-	_Bvelocity.x = 1;
+
 
 }
