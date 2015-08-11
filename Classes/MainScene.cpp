@@ -10,6 +10,7 @@ MainScene::MainScene()
 	:_stage(nullptr)
 	,_player(nullptr)
 	,_bullet(nullptr)
+
 {
 
 
@@ -43,6 +44,16 @@ Scene* MainScene::createScene()
 //voidという返り値を返さない型のMainSceneクラスのupdate(float dt)という関数を作る
 void MainScene::update(float dt) {
 
+	//Vec2型の_velocityという変数を整数値に直す？
+	_velocity.normalize();
+	//SPEEDという定数
+	const int SPEED = 5;
+	//自身の位置を、現在地＋ベクトル＊SPEEDの値にする
+	_player->setPosition(_player->getPosition() + _velocity * SPEED);
+
+	_Bvelocity.normalize();
+	const int BSPEED = 15;
+	this->setPosition(this->getPosition() + _Bvelocity * BSPEED);
 
 
 }
@@ -61,7 +72,6 @@ bool MainScene::init()
 	//MainSceneで_stageにstageをセットする
 	this->setStage(stage);
 
-	
 	//Playerクラスのポインタ変数kawaztanを作る
 	auto kawaztan = Player::create();
 	//kawaztanをX64,Y240の位置にセットする
@@ -75,6 +85,90 @@ bool MainScene::init()
 	//kawaztanの表示サイズを2倍にする
 	kawaztan->setScale(2.0f);
 
+	//cocos2d::EventListenerKeyboard型のポインタ変数keyboardListenerを宣言し、EventListenerKeyboard::createを代入
+	auto keyboardListener = EventListenerKeyboard::create();
+	//キーボードが押された時の処理を書く関数？
+	//詳細よくわからない
+	keyboardListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event *event) {
+
+
+		//もし押されたキーが←だったら
+		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
+			//X方向の速度を-1にする
+			_velocity.x = -1;
+
+		}
+		//そうではなくもし、キーが→だったら
+		else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+			//X方向の速度を1にする
+			_velocity.x = 1;
+		}
+		//もし押されたキーが↑だったら
+		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW) {
+			//Y方向の速度を1にする
+			_velocity.y = 1;
+			//playAnimation(int index)の変数indexに1を代入
+			//上方向へのアニメーションを再生
+			_player->playAnimation(1);
+
+		}
+		//そうではなくもし押されたキーが↓だったら
+		else if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+			//Y方向の速度を-1にする
+			_velocity.y = -1;
+			//playAnimation(int index)の変数indexに2を代入
+			//下方向へのアニメーションを再生
+			_player->playAnimation(2);
+		}
+		//もし押されたキーがスペースキーだったら
+		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
+			//Playerクラスのポインタ変数myBulletを作る
+			auto myBullet = Bullet::create();
+			//myBulletをkawaztanの現在位置にセットする
+			myBullet->setPosition(_player->getPosition());
+			//MainSceneの子にmyBulletを加える
+			this->addChild(myBullet);
+			//MainSceneでsetBulletにmyBulletをセットする
+			this->setBullet(myBullet);
+			//取得したmyBulletのテクスチャに対して設定を与えている
+			myBullet->getTexture()->setAliasTexParameters();
+
+			//Shot()関数を走らせる
+			_bullet->Shot();
+			//cocos2d::Spriteが格納できるポインタ配列（？）_bulletsに弾を生成
+			_bullet->_bullets.pushBack(myBullet);
+
+		}
+	};
+
+	//たぶんキーを離した時の処理　詳細わかんない
+	keyboardListener->onKeyReleased = [this](EventKeyboard::KeyCode keyCode, Event *event) {
+		//もしも離されたキーが←、または→だったら
+		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+			//X方向の速度を0に戻す
+			_velocity.x = 0.0f;
+		}
+		//もしも離されたキーが↑、または↓だったら
+		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW || keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+			//X方向の速度を0に戻す
+			_velocity.y = 0.0f;
+			//playAnimation(int index)の変数indexに0を代入
+			//アニメーションを待機、横移動のものへ戻す
+			_player->playAnimation(0);
+		}
+
+	};
+
+	//キーボードの処理を書いた後のおまじないみたいなもの。
+	//(ぎぎさんのコメントより抜粋→)EventListenerってのにキーを押したときとか、話したときみたいな処理を紐付けておいて
+	//最後にEventDispatcherっていうものに、今作ったEventListenerを登録して、「よしなにお願いします」って伝える処理
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+
+	// 上記の通りアニメーションを初期化
+	_player ->playAnimation(0);
+
+	//毎フレーム更新する
+	this->scheduleUpdate();
 	//MainSceneを毎フレーム更新する
 	this->scheduleUpdate();
 
