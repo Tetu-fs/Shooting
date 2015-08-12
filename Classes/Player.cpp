@@ -25,7 +25,6 @@ Player::~Player()
 //毎フレーム更新したい物をつっこむ？
 void Player::update(float dt)
 {
-
 }
 
 //bool型のPlayer::init()関数を宣言
@@ -44,16 +43,9 @@ bool Player::init()
 }
 
 void Player::playerShot(){
-	//Bulletクラスのポインタ変数myBulletを作る
-	auto myBullet = Bullet::create();
-	//myBulletをPlayerの現在位置にセットする
-	myBullet->setPosition(getPosition());
-	//Playerの子にmyBulletを加える
-	this->addChild(myBullet);
-	//PlayerでmyBulletをインスタンス化する
-	this->setBullet(myBullet);
-	//取得したmyBulletのテクスチャに対して設定を与えている
-	myBullet->getTexture()->setAliasTexParameters();
+	//弾のX方向の速度を1にする
+	_bullet->_Bvelocity.x = 1;
+	
 }
 
 

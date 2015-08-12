@@ -40,8 +40,7 @@ bool Bullet::init(){
 	auto Banimate = RepeatForever::create(Animate::create(Banimation));
 	this->runAction(Banimate);
 
-	//弾のX方向の速度を1にする
-	_Bvelocity.x = 1;
+
 
 	//毎フレーム更新
 	this->scheduleUpdate();

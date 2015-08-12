@@ -76,6 +76,7 @@ void MainScene::update(float dt) {
 	if (shotCount > 0){
 		Bullet *playerbullet = _player->getBullet();
 		Vec2 bulletPosition = playerbullet->getPosition();
+
 		for (Sprite * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
 			log("check_bullets %d", _bullets.size());
 
@@ -135,11 +136,21 @@ bool MainScene::init()
 	//詳細よくわからない
 	keyboardListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event *event) {
 
-		//Playerクラスのポインタ変数myBulletを作る
+		//Bulletクラスのポインタ変数myBulletを作る
 		auto myBullet = Bullet::create();
+
 		//もし押されたキーがスペースキーだったら
 		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
-
+			//Bulletクラスのポインタ変数myBulletを作る
+			auto myBullet = Bullet::create();
+			//myBulletをPlayerの現在位置にセットする
+			myBullet->setPosition(_player->getPosition());
+			//MainSceneの親の子にmyBulletを加える
+			this->addChild(myBullet);
+			//PlayerでmyBulletをインスタンス化する
+			_player->setBullet(myBullet);
+			//取得したmyBulletのテクスチャに対して設定を与えている
+			myBullet->getTexture()->setAliasTexParameters();
 			//Shot()関数を走らせる
 			_player->playerShot();
 
