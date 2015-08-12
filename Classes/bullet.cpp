@@ -22,17 +22,6 @@ bool Bullet::init(){
 		//返り値にfalseを返す
 		return false;
 	}
-
-
-	//毎フレーム更新
-	this->scheduleUpdate();
-	//返り値にtrueを返す
-	return true;
-}
-
-//int型のPlayer::Shot()関数を作成
-void Bullet::Shot() {
-
 	// cocos2d::Size型のBframeSize変数で表示する弾のスプライトのサイズを指定？
 	//詳細は上部frameSizeにて
 	auto BframeSize = Size(16.0, 16.0);
@@ -50,8 +39,12 @@ void Bullet::Shot() {
 	Banimation->setDelayPerUnit(0.05);
 	auto Banimate = RepeatForever::create(Animate::create(Banimation));
 	this->runAction(Banimate);
-	
+
 	//弾のX方向の速度を1にする
 	_Bvelocity.x = 1;
 
+	//毎フレーム更新
+	this->scheduleUpdate();
+	//返り値にtrueを返す
+	return true;
 }

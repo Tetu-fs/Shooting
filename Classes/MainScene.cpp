@@ -9,8 +9,6 @@ USING_NS_CC;
 MainScene::MainScene()
 	:_stage(nullptr)
 	,_player(nullptr)
-	,_bullet(nullptr)
-
 {
 	shotCount = 0;
 
@@ -22,7 +20,6 @@ MainScene::~MainScene()
 	//MainSceneクラスのpirvate変数_stageにの中身を削除してメモリを開放している。
 	CC_SAFE_RELEASE_NULL(_stage);
 	CC_SAFE_RELEASE_NULL(_player);
-	CC_SAFE_RELEASE_NULL(_bullet);
 
 }
 //戻り値の型がScene*のMainSceneクラスのcreateSceneという関数を作る
@@ -51,10 +48,6 @@ void MainScene::update(float dt) {
 	//自身の位置を、現在地＋ベクトル＊SPEEDの値にする
 	_player->setPosition(_player->getPosition() + _velocity * SPEED);
 
-	_Bvelocity.normalize();
-	const int BSPEED = 15;
-	this->setPosition(this->getPosition() + _Bvelocity * BSPEED);
-
 	Vec2 kawazPosition = _player->getPosition();
 
 	auto winSize = Director::getInstance()->getWinSize();
@@ -80,24 +73,25 @@ void MainScene::update(float dt) {
 		_velocity.y = 0;
 		_player->setPositionY(winSize.height);
 	}
-
 	if (shotCount > 0){
-		log("size = %d", _bullet->_bullets.size());
-		Vec2 bulletPosition = _bullet->getPosition();
-		for (Sprite * bullet : _bullet->_bullets) { // for-loopでbulletを1つずつ見ていく
-			if (bulletPosition.x >= 160) {  // この辺は画面外に出てる判定を自分で書く
+		Bullet *playerbullet = _player->getBullet();
+		Vec2 bulletPosition = playerbullet->getPosition();
+		for (Sprite * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
+			log("check_bullets %d", _bullets.size());
+
+			if (bulletPosition.x >= 200 || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
+
 				// もし画面外に出てたら
 				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
 			}
 		}
 
 		for (Sprite * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
-			_bullet->_bullets.eraseObject(bullet); // 1つずつ_bulletsから消していく
+			_bullets.eraseObject(bullet); // 1つずつ_bulletsから消していく
 			shotCount--;
 			log("delete %i", shotCount);
 		}
 		deletedBullets.clear(); // 最後に消す予定リストを全部消す
-
 	}
 }
 
@@ -146,20 +140,11 @@ bool MainScene::init()
 		//もし押されたキーがスペースキーだったら
 		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
 
-			//Playerクラスのポインタ変数myBulletを作る
-			auto myBullet = Bullet::create();
-			//myBulletをkawaztanの現在位置にセットする
-			myBullet->setPosition(_player->getPosition());
-			//MainSceneの子にmyBulletを加える
-			this->addChild(myBullet);
-			//MainSceneでsetBulletにmyBulletをセットする
-			this->setBullet(myBullet);
-			//取得したmyBulletのテクスチャに対して設定を与えている
-			myBullet->getTexture()->setAliasTexParameters();
 			//Shot()関数を走らせる
-			_bullet->Shot();
+			_player->playerShot();
+
 			//cocos2d::Spriteが格納できるポインタ配列（？）_bulletsに弾を生成
-			_bullet->_bullets.pushBack(myBullet);
+			_bullets.pushBack(myBullet);
 			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("shot_se.wav");
 
 			shotCount++;

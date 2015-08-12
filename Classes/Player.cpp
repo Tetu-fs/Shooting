@@ -11,8 +11,14 @@ const int FRAME_COUNT = 2;
 //二行目でヘッダーで宣言した変数indexCheckを初期化
 Player::Player()
 	: indexCheck(-1)
+	, _bullet(nullptr)
+
 {
 
+}
+Player::~Player()
+{
+	CC_SAFE_RELEASE_NULL(_bullet);
 }
 
 //void型のPlayer::update(float dt)関数を宣言
@@ -32,10 +38,22 @@ bool Player::init()
 		//返り値にfalseを返す
 		return false;
 	}
-	
 
 	//返り値にtrueを返す
 	return true;
+}
+
+void Player::playerShot(){
+	//Bulletクラスのポインタ変数myBulletを作る
+	auto myBullet = Bullet::create();
+	//myBulletをPlayerの現在位置にセットする
+	myBullet->setPosition(getPosition());
+	//Playerの子にmyBulletを加える
+	this->addChild(myBullet);
+	//PlayerでmyBulletをインスタンス化する
+	this->setBullet(myBullet);
+	//取得したmyBulletのテクスチャに対して設定を与えている
+	myBullet->getTexture()->setAliasTexParameters();
 }
 
 
@@ -103,4 +121,5 @@ void Player::playAnimation(int index) {
 	//indexCheckにindexの値を代入する
 	indexCheck = index;
 }
+
 

@@ -16,16 +16,8 @@ public:
 	// void型のupdate(float dt)という関数の宣言　overrideはおまじない。
 	void update(float dt)override;
 
-	// cocos2d::Spriteが格納できるポインタ配列（？）、_bulletsを定義する
-	cocos2d::Vector<cocos2d::Sprite*> _bullets;
-
-	Sprite *bullet;
-
 	//_Bvelocityは弾の速度を表す
 	cocos2d::Vec2 _Bvelocity; // 弾の移動量
-
-	//void型のshotという関数を作る
-	void Shot();
 
 	//auto Bullet = Bullet::create(); と同じ意味。bool init();が必要
 	//上記はBullet型の*Bulletというポインタ変数にBullet::create()を代入している
