@@ -38,6 +38,9 @@ public:
 	//_Bvelocityは弾の速度を表す
 	cocos2d::Vec2 _Bvelocity; // 弾の移動量
 
+	// 消す予定の弾リストを作る
+	cocos2d::Vector<cocos2d::Sprite *> deletedBullets;
+
 	// void型のupdate(float dt)という関数の宣言　overrideはおまじない。
 	void update(float dt) override;
 	//　void型の長い名前の関数の宣言

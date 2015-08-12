@@ -81,6 +81,24 @@ void MainScene::update(float dt) {
 		_player->setPositionY(winSize.height);
 	}
 
+	if (shotCount > 0){
+		log("size = %d", _bullet->_bullets.size());
+		Vec2 bulletPosition = _bullet->getPosition();
+		for (Sprite * bullet : _bullet->_bullets) { // for-loopでbulletを1つずつ見ていく
+			if (bulletPosition.x >= 160) {  // この辺は画面外に出てる判定を自分で書く
+				// もし画面外に出てたら
+				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
+			}
+		}
+
+		for (Sprite * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
+			_bullet->_bullets.eraseObject(bullet); // 1つずつ_bulletsから消していく
+			shotCount--;
+			log("delete %i", shotCount);
+		}
+		deletedBullets.clear(); // 最後に消す予定リストを全部消す
+
+	}
 }
 
 void MainScene::onEnterTransitionDidFinish()
@@ -142,8 +160,10 @@ bool MainScene::init()
 			_bullet->Shot();
 			//cocos2d::Spriteが格納できるポインタ配列（？）_bulletsに弾を生成
 			_bullet->_bullets.pushBack(myBullet);
-			log("%i", (int)_bullet->_bullets.size());
 			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("shot_se.wav");
+
+			shotCount++;
+			log("create %i", shotCount);
 
 		}
 
@@ -208,8 +228,6 @@ bool MainScene::init()
 	// 上記の通りアニメーションを初期化
 	_player ->playAnimation(0);
 
-	//毎フレーム更新する
-	this->scheduleUpdate();
 	//MainSceneを毎フレーム更新する
 	this->scheduleUpdate();
 
