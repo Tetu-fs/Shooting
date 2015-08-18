@@ -1,5 +1,6 @@
 //Player.hを読む
 #include "Player.h"
+#include "SimpleAudioEngine.h"
 
 //名前空間cocos2dをしようするという宣言
 USING_NS_CC;
@@ -11,14 +12,12 @@ const int FRAME_COUNT = 2;
 //二行目でヘッダーで宣言した変数indexCheckを初期化
 Player::Player()
 	: indexCheck(-1)
-	, _bullet(nullptr)
 
 {
 
 }
 Player::~Player()
 {
-	CC_SAFE_RELEASE_NULL(_bullet);
 }
 
 //void型のPlayer::update(float dt)関数を宣言
@@ -42,10 +41,18 @@ bool Player::init()
 	return true;
 }
 
-void Player::playerShot(){
-	//弾のX方向の速度を1にする
-	_bullet->_Bvelocity.x = 1;
-	
+Bullet * Player::shoot()
+{
+	//Bulletクラスのポインタ変数bulletを生成
+	Bullet *bullet = Bullet::create();
+	//bulletの位置をPlayerの現在地に設定
+	bullet->setPosition(this->getPosition());
+	//bulletに取得したテクスチャを与える
+	bullet->getTexture()->setAliasTexParameters();
+	//効果音をならす
+	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("shot_se.wav");
+	//戻り値にbulletを返す
+	return bullet;
 }
 
 

@@ -25,6 +25,13 @@ protected:
 	//bool型のinit関数を宣言　overrideはおまじない。
 	bool init() override;
 	
+	// cocos2d::Spriteが格納できるポインタ配列（？）、_bulletsを定義する
+	cocos2d::Vector<Bullet *> _bullets;
+
+	// 消す予定の弾リストを作る
+	cocos2d::Vector<Bullet *> deletedBullets;
+
+
 	//クラス外からでも参照できる
 public:
 	
@@ -34,13 +41,6 @@ public:
 	//cocos2d::Vec2という型で_velocityというメンバ変数を定義している
 	//この変数はキャラクターの速度を表し、毎フレームこの速度を現在座標に加えることで移動している
 	cocos2d::Vec2 _velocity; // 移動量
-
-
-	// cocos2d::Spriteが格納できるポインタ配列（？）、_bulletsを定義する
-	cocos2d::Vector<cocos2d::Sprite*> _bullets;
-
-	// 消す予定の弾リストを作る
-	cocos2d::Vector<cocos2d::Sprite *> deletedBullets;
 
 	// void型のupdate(float dt)という関数の宣言　overrideはおまじない。
 	void update(float dt) override;

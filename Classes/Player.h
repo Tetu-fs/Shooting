@@ -29,14 +29,12 @@ public:
 	void update(float dt)override;
 
 	//void型のplayerShotを宣言
-	void Player::playerShot();
+	Bullet* Player::shoot();
 
 
 	// void型のplayAnimation(int index)という関数の宣言　overrideはおまじない。
 	//同時にint型のindexという変数も宣言されている
 	void playAnimation(int index);
-
-	CC_SYNTHESIZE_RETAIN(Bullet*, _bullet, Bullet);
 
 	//auto Player = Player::create(); と同じ意味。bool init();が必要
 	//上記はPlayer型の*Playerというポインタ変数にPlayer::create()を代入している

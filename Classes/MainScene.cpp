@@ -73,27 +73,29 @@ void MainScene::update(float dt) {
 		_velocity.y = 0;
 		_player->setPositionY(winSize.height);
 	}
-	if (shotCount > 0){
-		Bullet *playerbullet = _player->getBullet();
-		Vec2 bulletPosition = playerbullet->getPosition();
 
-		for (Sprite * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
-			log("check_bullets %d", _bullets.size());
 
-			if (bulletPosition.x >= 200 || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
 
+		for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
+
+			Vec2 bulletPosition = bullet->getPosition();
+			if (bulletPosition.x >= 120 || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
+				log("create_bullets %d", _bullets.size());
 				// もし画面外に出てたら
 				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
 			}
 		}
 
-		for (Sprite * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
+
+		//log("check_bullets %d", _bullets.size());
+		for (Bullet * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
+			log("delete_bullets %d", _bullets.size());
 			_bullets.eraseObject(bullet); // 1つずつ_bulletsから消していく
 			shotCount--;
-			log("delete %i", shotCount);
 		}
 		deletedBullets.clear(); // 最後に消す予定リストを全部消す
-	}
+
+
 }
 
 void MainScene::onEnterTransitionDidFinish()
@@ -141,25 +143,11 @@ bool MainScene::init()
 
 		//もし押されたキーがスペースキーだったら
 		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
-			//Bulletクラスのポインタ変数myBulletを作る
-			auto myBullet = Bullet::create();
-			//myBulletをPlayerの現在位置にセットする
-			myBullet->setPosition(_player->getPosition());
-			//MainSceneの親の子にmyBulletを加える
-			this->addChild(myBullet);
-			//PlayerでmyBulletをインスタンス化する
-			_player->setBullet(myBullet);
-			//取得したmyBulletのテクスチャに対して設定を与えている
-			myBullet->getTexture()->setAliasTexParameters();
-			//Shot()関数を走らせる
-			_player->playerShot();
 
-			//cocos2d::Spriteが格納できるポインタ配列（？）_bulletsに弾を生成
-			_bullets.pushBack(myBullet);
-			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("shot_se.wav");
+			Bullet *bullet = _player->shoot();
+			this->addChild(bullet);
+			_bullets.pushBack(bullet);
 
-			shotCount++;
-			log("create %i", shotCount);
 
 		}
 
