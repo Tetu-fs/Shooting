@@ -8,7 +8,7 @@
 #include "cocos2d.h"
 #include "Stage.h"
 #include "Player.h"
-
+#include "Enemy.h"
 //Layerクラスのpublicで継承クラスMainSceneの宣言　
 class MainScene :public cocos2d::Layer
 {
@@ -25,7 +25,7 @@ protected:
 	//bool型のinit関数を宣言　overrideはおまじない。
 	bool init() override;
 	
-	// cocos2d::Spriteが格納できるポインタ配列（？）、_bulletsを定義する
+	// Bulletが格納できるポインタ配列（？）、_bulletsを定義する
 	cocos2d::Vector<Bullet *> _bullets;
 
 	// 消す予定の弾リストを作る
@@ -46,8 +46,7 @@ public:
 	void update(float dt) override;
 	//　void型の長い名前の関数の宣言
 	void onEnterTransitionDidFinish() override;
-	
-	int shotCount;
+
 
 	//stageを例にすると、Stage*という型をつくり、MainSceneクラスのprivate変数_stageを作り、getStage/setStageをつくる
 	//getStageは_stageを取得し、setStageは_stageを書き換えられる

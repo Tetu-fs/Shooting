@@ -10,7 +10,6 @@ MainScene::MainScene()
 	:_stage(nullptr)
 	,_player(nullptr)
 {
-	shotCount = 0;
 
 }
 //MainSceneのデストラクタ
@@ -74,26 +73,24 @@ void MainScene::update(float dt) {
 		_player->setPositionY(winSize.height);
 	}
 
+	for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
 
-
-		for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
-
-			Vec2 bulletPosition = bullet->getPosition();
-			if (bulletPosition.x >= 120 || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
-				log("create_bullets %d", _bullets.size());
-				// もし画面外に出てたら
-				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
-			}
+		Vec2 bulletPosition = bullet->getPosition();
+		if (bulletPosition.x >= 640 || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
+			log("create_bullets %d", _bullets.size());
+			// もし画面外に出てたら
+			deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
+			this->removeChild(bullet);
+	
 		}
+	}
 
-
-		//log("check_bullets %d", _bullets.size());
-		for (Bullet * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
-			log("delete_bullets %d", _bullets.size());
-			_bullets.eraseObject(bullet); // 1つずつ_bulletsから消していく
-			shotCount--;
-		}
-		deletedBullets.clear(); // 最後に消す予定リストを全部消す
+	//log("check_bullets %d", _bullets.size());
+	for (Bullet * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
+		log("delete_bullets %d", _bullets.size());
+		_bullets.eraseObject(bullet); // 1つずつ_bulletsから消していく
+	}
+	deletedBullets.clear(); // 最後に消す予定リストを全部消す
 
 
 }
@@ -132,20 +129,29 @@ bool MainScene::init()
 	//kawaztanの表示サイズを2倍にする
 	kawaztan->setScale(2.0f);
 
+	//Playerクラスのポインタ変数kawaztanを作る
+	auto enemy = Enemy::create();
+	//kawaztanをX64,Y240の位置にセットする
+	enemy->setPosition(Vec2(540, 240));
+	//MainSceneの子にkawaztanを加える
+	this->addChild(enemy);
+	//取得したkawaztanのテクスチャに対して設定を与えている
+	enemy->getTexture()->setAliasTexParameters();
+	//kawaztanの表示サイズを2倍にする
+	enemy->setScale(2.0f);
+
 	//cocos2d::EventListenerKeyboard型のポインタ変数keyboardListenerを宣言し、EventListenerKeyboard::createを代入
 	auto keyboardListener = EventListenerKeyboard::create();
 	//キーボードが押された時の処理を書く関数？
 	//詳細よくわからない
 	keyboardListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event *event) {
 
-		//Bulletクラスのポインタ変数myBulletを作る
-		auto myBullet = Bullet::create();
-
 		//もし押されたキーがスペースキーだったら
 		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
 
 			Bullet *bullet = _player->shoot();
 			this->addChild(bullet);
+
 			_bullets.pushBack(bullet);
 
 
