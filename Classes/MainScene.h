@@ -16,7 +16,7 @@ class MainScene :public cocos2d::Layer
 {
 	//MainSceneの中でのみ
 protected:
-	
+
 	//MainSceneのコンストラクタの宣言 （名前が同じだからわかりづらい気がするがそういうものらしい
 	MainScene();
 	
@@ -26,8 +26,19 @@ protected:
 	//CREATE_FUNCを使用するのに必要
 	//bool型のinit関数を宣言　overrideはおまじない。
 	bool init() override;
-	
 
+	enum class GameState
+	{
+		PLAYING,
+
+		RESULT
+	};
+
+	//敵湧きのタイマーとその値の変数
+	int popTimer;
+	int popGuide;
+	//敵を倒した数の変数
+	int enemyBusted;
 	//クラス外からでも参照できる
 public:
 	
@@ -55,11 +66,22 @@ public:
 	//　void型の長い名前の関数の宣言
 	void onEnterTransitionDidFinish() override;
 
+	//リザルトの処理
+	void onResult();
 
 	//stageを例にすると、Stage*という型をつくり、MainSceneクラスのprivate変数_stageを作り、getStage/setStageをつくる
 	//getStageは_stageを取得し、setStageは_stageを書き換えられる
 	CC_SYNTHESIZE_RETAIN(Stage* , _stage, Stage);
 	CC_SYNTHESIZE_RETAIN(Player*, _player, Player);
+
+	CC_SYNTHESIZE(int, _score, Score);
+	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _scoreLabel, ScoreLabel);
+	
+	CC_SYNTHESIZE(int, _life, Life);
+	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _lifeLabel, LifeLabel);
+
+	CC_SYNTHESIZE(GameState, _state, State);
+
 
 	//auto mainScene = MainScene::create(); と同じ意味。bool init();が必要
 	//上記はMainScene型の*mainSceneというポインタ変数にMainScene::create()を代入している

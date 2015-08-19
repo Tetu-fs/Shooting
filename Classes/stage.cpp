@@ -19,10 +19,12 @@ Stage::~Stage()
 
 Enemy * Stage::popEnemy()
 {
+	float enemyY = RandomHelper::random_real<float>(80, 400);
+
 	//Enemyクラスのポインタ変数enemyを作る
 	Enemy *enemy = Enemy::create();
 	//enemyをX540,Y240の位置にセットする
-	enemy->setPosition(Vec2(540, 300));
+	enemy->setPosition(Vec2(540, enemyY));
 	//取得したenemyのテクスチャに対して設定を与えている
 	enemy->getTexture()->setAliasTexParameters();
 	//enemyの表示サイズを2倍にする
@@ -32,6 +34,7 @@ Enemy * Stage::popEnemy()
 	//戻り値にbulletを返す
 	return enemy;
 }
+
 bool Stage::init()
 {
 	//int型の変数x,yを宣言、初期化

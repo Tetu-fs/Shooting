@@ -5,6 +5,8 @@ USING_NS_CC;
 
 const int EFRAME_COUNT = 2;
 
+
+
 void Enemy::update(float dt)
 {
 
@@ -34,7 +36,7 @@ bool Enemy::init(){
 	Banimation->setDelayPerUnit(0.1);
 	auto Banimate = RepeatForever::create(Animate::create(Banimation));
 	this->runAction(Banimate);
-	auto enemyMove = MoveTo::create(6, Vec2(-600,0 ) );
+	auto enemyMove = MoveTo::create(4, Vec2(-600,0 ) );
 	this->runAction(enemyMove);
 	//毎フレーム更新
 	this->scheduleUpdate();

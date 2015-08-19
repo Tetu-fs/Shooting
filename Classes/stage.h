@@ -22,6 +22,7 @@ protected:
 	//CREATE_FUNC()に必須
 	bool init() override;
 
+
 	//クラス外からでも参照可能
 public:
 	//void型のupdate(float dt)関数の宣言　overrideはおまじない

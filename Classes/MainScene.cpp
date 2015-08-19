@@ -6,12 +6,19 @@ USING_NS_CC;
 //MainSceneクラスのコンストラクタ
 //_stage(nullptr)を例にすると「MainSceneクラスのpirvate変数_stageに無を代入する」の意
 MainScene::MainScene()
-	:_stage(nullptr)
-	,_player(nullptr)
-
+	: _score(0)
+	, _life(5)
+	,  _stage(nullptr)
+	, _player(nullptr)
+	, _scoreLabel(nullptr)
+	, _lifeLabel(nullptr)
+	, _state(GameState::PLAYING)
 {
-
+	popTimer = 0;
+	popGuide = 60;
+	enemyBusted = 0;
 }
+
 //MainSceneのデストラクタ
 MainScene::~MainScene()
 {
@@ -19,8 +26,10 @@ MainScene::~MainScene()
 	//MainSceneクラスのpirvate変数_stageにの中身を削除してメモリを開放している。
 	CC_SAFE_RELEASE_NULL(_stage);
 	CC_SAFE_RELEASE_NULL(_player);
-
+	CC_SAFE_RELEASE_NULL(_scoreLabel);
+	CC_SAFE_RELEASE_NULL(_lifeLabel);
 }
+
 //戻り値の型がScene*のMainSceneクラスのcreateSceneという関数を作る
 Scene* MainScene::createScene()
 {
@@ -43,12 +52,12 @@ void MainScene::update(float dt) {
 	//Vec2型の_velocityという変数を整数値に直す？
 	_velocity.normalize();
 	//SPEEDという定数
-	const int SPEED = 5;
+	const int SPEED = 6;
 	//自身の位置を、現在地＋ベクトル＊SPEEDの値にする
 	_player->setPosition(_player->getPosition() + _velocity * SPEED);
 
+	//移動制限処理
 	Vec2 kawazPosition = _player->getPosition();
-
 	auto winSize = Director::getInstance()->getWinSize();
 
 	if (kawazPosition.x <= 0)
@@ -73,39 +82,76 @@ void MainScene::update(float dt) {
 		_player->setPositionY(winSize.height);
 	}
 
-	for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
-		for (Enemy * enemy : _enemys) { // for-loopでbulletを1つずつ見ていく
+	if (_state == GameState::PLAYING){
+		//一定時間ごとに敵を出現させる処理
+		popTimer++;
 
-			//うまく行ってる
-			Vec2 bulletPosition = bullet->getPosition();
-			if (bulletPosition.x > winSize.width || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
-				// もし画面外に出てたら
-				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
-				this->removeChild(bullet);
-			}
+		if (popTimer == popGuide){
 
-			//うまく行ってないっぽい
-			Vec2 enemyPosition = enemy->getPosition();
-			if (enemyPosition.x > winSize.width || enemyPosition.x < 0) {  
-				// もし画面外に出てたら
-				deletedEnemys.pushBack(enemy);
-				this->removeChild(enemy);
-			}
+			Enemy *enemy = _stage->popEnemy();
+			this->addChild(enemy);
+			_enemys.pushBack(enemy);
 
-			Vec2 bulletHit = bullet->getPosition();
-			Rect boundingBox = enemy->getBoundingBox();
-			bool isHit = boundingBox.containsPoint(bulletHit);
-			if (isHit) {  // もしも当たったら
-				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
-				this->removeChild(bullet);
-				deletedEnemys.pushBack(enemy);
-				this->removeChild(enemy);
-
-				CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("hit_se.wav");
-
-
-			}
+			popTimer = 0;
 		}
+		if (_life == 0)
+		{
+			_state = GameState::RESULT;
+			this->onResult();
+		}
+
+	}
+	//消滅処理
+	for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
+		Vec2 bulletPosition = bullet->getPosition();
+		if (bulletPosition.x > winSize.width || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
+			// もし画面外に出てたら
+			deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
+			this->removeChild(bullet);
+		}
+	}	
+	for (Enemy * enemy : _enemys) { // for-loopでenemyを1つずつ見ていく
+		Vec2 enemyPosition = enemy->getPosition();
+		if (enemyPosition.x > winSize.width || enemyPosition.x < 0) {
+			// もし画面外に出てたら
+			deletedEnemys.pushBack(enemy);
+			this->removeChild(enemy);
+			_life--;
+			_lifeLabel->setString(StringUtils::toString(_life));
+
+		}
+	}
+		for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
+			for (Enemy * enemy : _enemys) { // for-loopでbulletを1つずつ見ていく
+
+				Vec2 bulletHit = bullet->getPosition();
+				Rect boundingBox = enemy->getBoundingBox();
+				bool isHit = boundingBox.containsPoint(bulletHit);
+				if (isHit) {  // もしも当たったら
+					deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
+					this->removeChild(bullet);
+					deletedEnemys.pushBack(enemy);
+					this->removeChild(enemy);
+					enemyBusted++;	
+					_score += 100;
+					if (enemyBusted == 20 && popGuide > 10){
+						popGuide -= 10;
+						CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
+
+					}
+					if (enemyBusted == 20)
+					{
+						_score *= 2;
+						enemyBusted = 0;
+		
+					}
+
+					_scoreLabel->setString(StringUtils::toString(_score));
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("hit_se.wav");
+
+
+				}
+			}
 	}
 	//log("check_bullets %d", _bullets.size());
 	for (Bullet * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
@@ -129,6 +175,17 @@ void MainScene::onEnterTransitionDidFinish()
 	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("shooting_loop.wav", true);
 }
 
+void MainScene::onResult(){
+	_state = GameState::RESULT;
+	auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "arial", 32);
+	scoreLabel->setPosition(Vec2(320, 240));
+	this->setScoreLabel(scoreLabel);
+	this->addChild(_scoreLabel);
+
+	auto scoreHeader = Label::createWithSystemFont("Score", "arial", 32);
+	scoreHeader->setPosition(Vec2(320, 280));
+	this->addChild(scoreHeader);
+}
 // tlue falseをとるboolという型のMainSceneクラスのinitという関数を作る
 bool MainScene::init()
 {
@@ -137,12 +194,31 @@ bool MainScene::init()
 	{
 		return false;
 	}
+
 	//Stageクラスのポインタ変数stageを作る
 	auto stage = Stage::create();
 	//MainSceneの子にstageを加える
 	this->addChild(stage);
 	//MainSceneで_stageにstageをセットする
 	this->setStage(stage);
+
+	auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "arial", 16);
+	scoreLabel->setPosition(Vec2(600, 440));
+	this->setScoreLabel(scoreLabel);
+	this->addChild(_scoreLabel);
+
+	auto scoreHeader = Label::createWithSystemFont("Score", "arial", 16);
+	scoreHeader->setPosition(Vec2(580, 460));
+	this->addChild(scoreHeader);
+
+	auto lifeLabel = Label::createWithSystemFont(StringUtils::toString(_life), "arial", 16);
+	lifeLabel->setPosition(Vec2(20, 440));
+	this->setLifeLabel(lifeLabel);
+	this->addChild(_lifeLabel);
+
+	auto lifeHeader = Label::createWithSystemFont("Life", "arial", 16);
+	lifeHeader->setPosition(Vec2(40, 460));
+	this->addChild(lifeHeader);
 
 	//Playerクラスのポインタ変数kawaztanを作る
 	auto kawaztan = Player::create();
@@ -166,18 +242,9 @@ bool MainScene::init()
 
 		//もし押されたキーがスペースキーだったら
 		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
-
 			Bullet *bullet = _player->shoot();
 			this->addChild(bullet);
 			_bullets.pushBack(bullet);
-
-
-			Enemy *enemy = _stage->popEnemy();
-			this->addChild(enemy);
-			_enemys.pushBack(enemy);
-
-
-
 		}
 
 
