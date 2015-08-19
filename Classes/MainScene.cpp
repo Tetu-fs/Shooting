@@ -1,6 +1,5 @@
 ﻿//cocos_test.hっていうヘッダーファイルを読む
 #include "MainScene.h"
-#include "SimpleAudioEngine.h"
 //名前空間cocos2dを使うという宣言
 USING_NS_CC;
 
@@ -9,6 +8,7 @@ USING_NS_CC;
 MainScene::MainScene()
 	:_stage(nullptr)
 	,_player(nullptr)
+
 {
 
 }
@@ -74,17 +74,39 @@ void MainScene::update(float dt) {
 	}
 
 	for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
+		for (Enemy * enemy : _enemys) { // for-loopでbulletを1つずつ見ていく
 
-		Vec2 bulletPosition = bullet->getPosition();
-		if (bulletPosition.x >= 640 || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
-			log("create_bullets %d", _bullets.size());
-			// もし画面外に出てたら
-			deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
-			this->removeChild(bullet);
-	
+			//うまく行ってる
+			Vec2 bulletPosition = bullet->getPosition();
+			if (bulletPosition.x > winSize.width || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
+				// もし画面外に出てたら
+				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
+				this->removeChild(bullet);
+			}
+
+			//うまく行ってないっぽい
+			Vec2 enemyPosition = enemy->getPosition();
+			if (enemyPosition.x > winSize.width || enemyPosition.x < 0) {  
+				// もし画面外に出てたら
+				deletedEnemys.pushBack(enemy);
+				this->removeChild(enemy);
+			}
+
+			Vec2 bulletHit = bullet->getPosition();
+			Rect boundingBox = enemy->getBoundingBox();
+			bool isHit = boundingBox.containsPoint(bulletHit);
+			if (isHit) {  // もしも当たったら
+				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
+				this->removeChild(bullet);
+				deletedEnemys.pushBack(enemy);
+				this->removeChild(enemy);
+
+				CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("hit_se.wav");
+
+
+			}
 		}
 	}
-
 	//log("check_bullets %d", _bullets.size());
 	for (Bullet * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
 		log("delete_bullets %d", _bullets.size());
@@ -92,6 +114,12 @@ void MainScene::update(float dt) {
 	}
 	deletedBullets.clear(); // 最後に消す予定リストを全部消す
 
+	//消す敵リストに突っ込む
+	for (Enemy * enemy : deletedEnemys) {
+		log("delete_enemys %d", _enemys.size());
+		_enemys.eraseObject(enemy);
+	}
+	deletedEnemys.clear();
 
 }
 
@@ -129,16 +157,6 @@ bool MainScene::init()
 	//kawaztanの表示サイズを2倍にする
 	kawaztan->setScale(2.0f);
 
-	//Playerクラスのポインタ変数kawaztanを作る
-	auto enemy = Enemy::create();
-	//kawaztanをX64,Y240の位置にセットする
-	enemy->setPosition(Vec2(540, 240));
-	//MainSceneの子にkawaztanを加える
-	this->addChild(enemy);
-	//取得したkawaztanのテクスチャに対して設定を与えている
-	enemy->getTexture()->setAliasTexParameters();
-	//kawaztanの表示サイズを2倍にする
-	enemy->setScale(2.0f);
 
 	//cocos2d::EventListenerKeyboard型のポインタ変数keyboardListenerを宣言し、EventListenerKeyboard::createを代入
 	auto keyboardListener = EventListenerKeyboard::create();
@@ -151,8 +169,13 @@ bool MainScene::init()
 
 			Bullet *bullet = _player->shoot();
 			this->addChild(bullet);
-
 			_bullets.pushBack(bullet);
+
+
+			Enemy *enemy = _stage->popEnemy();
+			this->addChild(enemy);
+			_enemys.pushBack(enemy);
+
 
 
 		}

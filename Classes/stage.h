@@ -5,6 +5,9 @@
 #define __MyGame__stage__
 //cocos2d.hをよむ
 #include "cocos2d.h"
+#include "Enemy.h"
+#include "SimpleAudioEngine.h"
+
 //cocos2d::Layerクラスのパブリックで継承クラスStageを作る
 class Stage :public cocos2d::Layer
 {
@@ -23,6 +26,10 @@ protected:
 public:
 	//void型のupdate(float dt)関数の宣言　overrideはおまじない
 	void update(float dt) override;
+
+	//Eenmy型StageクラスのpopEnemeyメソッドを宣言
+	Enemy* Stage::popEnemy();
+
 
 	//Tile
 	//TMXTiledMapという型をつくり、Stageクラスのprivate変数_tiledMapを作り、getTledMap/setTledMapをつくる

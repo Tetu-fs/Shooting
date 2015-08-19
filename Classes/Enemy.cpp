@@ -34,7 +34,8 @@ bool Enemy::init(){
 	Banimation->setDelayPerUnit(0.1);
 	auto Banimate = RepeatForever::create(Animate::create(Banimation));
 	this->runAction(Banimate);
-
+	auto enemyMove = MoveTo::create(6, Vec2(-600,0 ) );
+	this->runAction(enemyMove);
 	//毎フレーム更新
 	this->scheduleUpdate();
 	//返り値にtrueを返す

@@ -8,7 +8,9 @@
 #include "cocos2d.h"
 #include "Stage.h"
 #include "Player.h"
-#include "Enemy.h"
+#include "SimpleAudioEngine.h"
+
+
 //Layerクラスのpublicで継承クラスMainSceneの宣言　
 class MainScene :public cocos2d::Layer
 {
@@ -25,16 +27,22 @@ protected:
 	//bool型のinit関数を宣言　overrideはおまじない。
 	bool init() override;
 	
+
+	//クラス外からでも参照できる
+public:
+	
 	// Bulletが格納できるポインタ配列（？）、_bulletsを定義する
 	cocos2d::Vector<Bullet *> _bullets;
 
 	// 消す予定の弾リストを作る
 	cocos2d::Vector<Bullet *> deletedBullets;
 
+	// Enemyが格納できるポインタ配列（？）、_enemysを定義する
+	cocos2d::Vector<Enemy *> _enemys;
 
-	//クラス外からでも参照できる
-public:
-	
+	// 消す予定の敵リストを作る
+	cocos2d::Vector<Enemy *> deletedEnemys;
+
 	// クラス関数であるcocos2d::Scene型の*createSceneという関数の宣言
 	static cocos2d::Scene* createScene();
 

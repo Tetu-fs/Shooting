@@ -28,7 +28,7 @@ public:
 	// void型のupdate(float dt)という関数の宣言　overrideはおまじない。
 	void update(float dt)override;
 
-	//void型のplayerShotを宣言
+	//Bullet型Playerクラスのshootメソッドを宣言
 	Bullet* Player::shoot();
 
 

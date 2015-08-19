@@ -16,7 +16,7 @@ public:
 	// void型のupdate(float dt)という関数の宣言　overrideはおまじない。
 	void update(float dt)override;
 
-	//auto Bullet = Bullet::create(); と同じ意味。bool init();が必要
-	//上記はBullet型の*Bulletというポインタ変数にBullet::create()を代入している
+	//auto Enemy = Enemy::create(); と同じ意味。bool init();が必要
+	//上記はEnemy型の*Enemyというポインタ変数にEnemy::create()を代入している
 	CREATE_FUNC(Enemy);
 };

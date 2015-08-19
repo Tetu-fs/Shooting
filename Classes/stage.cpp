@@ -1,5 +1,6 @@
 ﻿//Stage.hというヘッダーファイルを読む
 #include "Stage.h"
+
 //名前空間cocos2dを使うという宣言
 USING_NS_CC;
 
@@ -16,6 +17,21 @@ Stage::~Stage()
 }
 //bool型のStage::init()関数を宣言
 
+Enemy * Stage::popEnemy()
+{
+	//Enemyクラスのポインタ変数enemyを作る
+	Enemy *enemy = Enemy::create();
+	//enemyをX540,Y240の位置にセットする
+	enemy->setPosition(Vec2(540, 300));
+	//取得したenemyのテクスチャに対して設定を与えている
+	enemy->getTexture()->setAliasTexParameters();
+	//enemyの表示サイズを2倍にする
+	enemy->setScale(2.0f);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("pop_se.wav");
+
+	//戻り値にbulletを返す
+	return enemy;
+}
 bool Stage::init()
 {
 	//int型の変数x,yを宣言、初期化
