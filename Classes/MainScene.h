@@ -1,8 +1,8 @@
 //もしdefineされていなければ
-#ifndef __MyGame__cocos_test__
+#ifndef __MyGame__MainScene__
 //コンパイル時に置き換える　インクルードガードというらしい。
 //ifndefとendifの間に挟むとエラーが出なくなるおまじない。
-#define __MyGame__cocos_test__
+#define __MyGame___MainScene__
 
 //ヘッダーファイル等を読み込む
 #include "cocos2d.h"
@@ -90,4 +90,4 @@ public:
 
 };
 //ifndefからここまでをコンパイルする　らしい
-#endif /*defined(__MyGame__cocos_test__)*/
+#endif /*defined(__MyGame___MainScene__)*/

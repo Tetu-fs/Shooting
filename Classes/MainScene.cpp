@@ -15,7 +15,7 @@ MainScene::MainScene()
 	, _state(GameState::PLAYING)
 {
 	popTimer = 0;
-	popGuide = 60;
+	popGuide = 90;
 	enemyBusted = 0;
 }
 
@@ -86,7 +86,7 @@ void MainScene::update(float dt) {
 		//一定時間ごとに敵を出現させる処理
 		popTimer++;
 
-		if (popTimer == popGuide){
+		if (popTimer >= popGuide){
 
 			Enemy *enemy = _stage->popEnemy();
 			this->addChild(enemy);
@@ -133,17 +133,20 @@ void MainScene::update(float dt) {
 					deletedEnemys.pushBack(enemy);
 					this->removeChild(enemy);
 					enemyBusted++;	
+					log("enemyBusted %d", enemyBusted);
+					log("popGuide %d", popGuide);
+					log("popTimer %d", popTimer);
 					_score += 100;
-					if (enemyBusted == 20 && popGuide > 10){
+					if (enemyBusted >= 15 && popGuide > 10){
 						popGuide -= 10;
-						CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
 
 					}
-					if (enemyBusted == 20)
+					if (enemyBusted == 15)
 					{
 						_score *= 2;
 						enemyBusted = 0;
-		
+						CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
+
 					}
 
 					_scoreLabel->setString(StringUtils::toString(_score));
@@ -178,13 +181,45 @@ void MainScene::onEnterTransitionDidFinish()
 void MainScene::onResult(){
 	_state = GameState::RESULT;
 	auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "arial", 32);
-	scoreLabel->setPosition(Vec2(320, 240));
+	scoreLabel->setPosition(Vec2(320, 400));
 	this->setScoreLabel(scoreLabel);
 	this->addChild(_scoreLabel);
 
 	auto scoreHeader = Label::createWithSystemFont("Score", "arial", 32);
-	scoreHeader->setPosition(Vec2(320, 280));
+	scoreHeader->setPosition(Vec2(320, 440));
 	this->addChild(scoreHeader);
+
+	auto replay_normal = Sprite::create("replay.png");
+	auto replay_press = Sprite::create("replay_press.png");
+	auto title_normal = Sprite::create("title.png");
+	auto title_press = Sprite::create("title_press.png");
+
+	//リプレイボタンの処理
+	auto replayButton = MenuItemSprite::create(replay_normal, replay_press , [](Ref* ref)
+	{
+		auto scene = MainScene::createScene();
+		Director::getInstance()->replaceScene(scene);
+	});
+
+	//タイトルボタンの処理
+	auto titleButton = MenuItemSprite::create(title_normal, title_press, [](Ref* ref)
+	{
+
+	});
+	replay_normal->getTexture()->setAliasTexParameters();
+	replay_press->getTexture()->setAliasTexParameters();
+	title_normal->getTexture()->setAliasTexParameters();
+	title_press->getTexture()->setAliasTexParameters();
+	replayButton->setScale(2.0f);
+	titleButton->setScale(2.0f);
+
+	//それぞれのボタンからメニューを作成
+	auto menu = Menu::create(replayButton, titleButton, NULL);
+	//ボタンを縦に並べる
+	menu->alignItemsVerticallyWithPadding(15);
+	menu->setPosition(Vec2(320, 240));
+
+	this->addChild(menu);
 }
 // tlue falseをとるboolという型のMainSceneクラスのinitという関数を作る
 bool MainScene::init()
@@ -249,20 +284,20 @@ bool MainScene::init()
 
 
 		//もし押されたキーが←だったら
-		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
+		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_A) {
 			//X方向の速度を-1にする
 			_velocity.x = -1;
 
 
 		}
 		//そうではなくもし、キーが→だったら
-		else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
+		else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_D) {
 			//X方向の速度を1にする
 			_velocity.x = 1;
 
 		}
 		//もし押されたキーが↑だったら
-		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW) {
+		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW || keyCode == EventKeyboard::KeyCode::KEY_W) {
 
 			//Y方向の速度を1にする
 			_velocity.y = 1;
@@ -273,7 +308,7 @@ bool MainScene::init()
 
 		}
 		//そうではなくもし押されたキーが↓だったら
-		else if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+		else if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW || keyCode == EventKeyboard::KeyCode::KEY_S) {
 			//Y方向の速度を-1にする
 			_velocity.y = -1;
 			//playAnimation(int index)の変数indexに2を代入
