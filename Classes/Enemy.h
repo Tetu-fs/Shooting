@@ -11,12 +11,50 @@ protected:
 	//bool型のinit関数を宣言　overrideはおまじない。
 	bool init() override;
 
+
 	//クラス外でも参照できる
 public:
+
 	// void型のupdate(float dt)という関数の宣言　overrideはおまじない。
 	void update(float dt)override;
 
 	//auto Enemy = Enemy::create(); と同じ意味。bool init();が必要
 	//上記はEnemy型の*Enemyというポインタ変数にEnemy::create()を代入している
 	CREATE_FUNC(Enemy);
+};
+
+class ZakoEnemy: public Enemy
+{
+	//クラスの中でのみ
+protected:
+
+	//CREATE_FUNCを使用するのに必要
+	//bool型のinit関数を宣言　overrideはおまじない。
+	bool init() override;
+
+
+	//クラス外でも参照できる
+public:
+
+	//auto Enemy = Enemy::create(); と同じ意味。bool init();が必要
+	//上記はEnemy型の*Enemyというポインタ変数にEnemy::create()を代入している
+	CREATE_FUNC(ZakoEnemy);
+};
+
+class RareEnemy : public Enemy
+{
+	//クラスの中でのみ
+protected:
+
+	//CREATE_FUNCを使用するのに必要
+	//bool型のinit関数を宣言　overrideはおまじない。
+	bool init() override;
+
+
+	//クラス外でも参照できる
+public:
+
+	//auto Enemy = Enemy::create(); と同じ意味。bool init();が必要
+	//上記はEnemy型の*Enemyというポインタ変数にEnemy::create()を代入している
+	CREATE_FUNC(RareEnemy);
 };

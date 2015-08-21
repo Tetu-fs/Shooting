@@ -28,9 +28,10 @@ public:
 	//void型のupdate(float dt)関数の宣言　overrideはおまじない
 	void update(float dt) override;
 
-	//Eenmy型StageクラスのpopEnemeyメソッドを宣言
-	Enemy* Stage::popEnemy();
-
+	//Eenmy型StageクラスのpopZakoメソッドを宣言
+	Enemy* Stage::popZako();
+	//Eenmy型StageクラスのpopRareメソッドを宣言
+	Enemy* Stage::popRare();
 
 	//Tile
 	//TMXTiledMapという型をつくり、Stageクラスのprivate変数_tiledMapを作り、getTledMap/setTledMapをつくる

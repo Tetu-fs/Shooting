@@ -1,5 +1,6 @@
 ﻿//cocos_test.hっていうヘッダーファイルを読む
 #include "MainScene.h"
+#include "TitleScene.h"
 //名前空間cocos2dを使うという宣言
 USING_NS_CC;
 
@@ -56,7 +57,7 @@ void MainScene::update(float dt) {
 	//自身の位置を、現在地＋ベクトル＊SPEEDの値にする
 	_player->setPosition(_player->getPosition() + _velocity * SPEED);
 
-	//移動制限処理
+	//移動制限stop
 	Vec2 kawazPosition = _player->getPosition();
 	auto winSize = Director::getInstance()->getWinSize();
 
@@ -83,17 +84,27 @@ void MainScene::update(float dt) {
 	}
 
 	if (_state == GameState::PLAYING){
-		//一定時間ごとに敵を出現させる処理
+		//一定時間ごとに敵を出現させるstop
 		popTimer++;
 
 		if (popTimer >= popGuide){
+			enemy_pop = RandomHelper::random_int<int>(1, 100);
 
-			Enemy *enemy = _stage->popEnemy();
-			this->addChild(enemy);
-			_enemys.pushBack(enemy);
-
+			if (enemy_pop > 5)
+			{
+				Enemy *zako = _stage->popZako();
+				this->addChild(zako);
+				_zako.pushBack(zako);
+			}
+			else
+			{
+				Enemy *rare = _stage->popRare();
+				this->addChild(rare);
+				_rare.pushBack(rare);
+			}
 			popTimer = 0;
 		}
+
 		if (_life == 0)
 		{
 			_state = GameState::RESULT;
@@ -101,7 +112,7 @@ void MainScene::update(float dt) {
 		}
 
 	}
-	//消滅処理
+	//消滅stop
 	for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
 		Vec2 bulletPosition = bullet->getPosition();
 		if (bulletPosition.x > winSize.width || bulletPosition.x < 0) {  // この辺は画面外に出てる判定を自分で書く
@@ -110,64 +121,106 @@ void MainScene::update(float dt) {
 			this->removeChild(bullet);
 		}
 	}	
-	for (Enemy * enemy : _enemys) { // for-loopでenemyを1つずつ見ていく
-		Vec2 enemyPosition = enemy->getPosition();
-		if (enemyPosition.x > winSize.width || enemyPosition.x < 0) {
+
+	for (Enemy * zako : _zako) { // for-loopでzakoを1つずつ見ていく
+		Vec2 zakoPosition = zako->getPosition();
+		if (zakoPosition.x > winSize.width || zakoPosition.x < 0) {
 			// もし画面外に出てたら
-			deletedEnemys.pushBack(enemy);
-			this->removeChild(enemy);
+			deletedEnemys.pushBack(zako);
+			this->removeChild(zako);
 			_life--;
 			_lifeLabel->setString(StringUtils::toString(_life));
+			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("damage_se.wav");
 
 		}
 	}
+
+	for (Enemy * rare : _rare) { // for-loopでrareを1つずつ見ていく
+		Vec2 rarePosition = rare->getPosition();
+		if (rarePosition.x > winSize.width || rarePosition.x < 0) {
+			// もし画面外に出てたら
+			deletedEnemys.pushBack(rare);
+			this->removeChild(rare);
+			_life--;
+			_lifeLabel->setString(StringUtils::toString(_life));
+			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("damage_se.wav");
+
+		}
+	}
+
+	for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
+		for (Enemy * zako : _zako) { // for-loopでbulletを1つずつ見ていく
+
+			Vec2 bulletHit = bullet->getPosition();
+			Rect zakoBoundingBox = zako->getBoundingBox();
+			bool zakoHit = zakoBoundingBox.containsPoint(bulletHit);
+			if (zakoHit) {  // もしも当たったら
+				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
+				this->removeChild(bullet);
+				deletedEnemys.pushBack(zako);
+				this->removeChild(zako);
+				enemyBusted++;
+
+				_score += 100;
+				if (enemyBusted >= 10 && popGuide > 5){
+					popGuide -= 5;
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
+
+					enemyBusted = 0;
+				}
+
+
+				_scoreLabel->setString(StringUtils::toString(_score));
+				CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("hit_se.wav");
+
+
+			}
+		}
 		for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
-			for (Enemy * enemy : _enemys) { // for-loopでbulletを1つずつ見ていく
+			for (Enemy * rare : _rare) { // for-loopでbulletを1つずつ見ていく
 
 				Vec2 bulletHit = bullet->getPosition();
-				Rect boundingBox = enemy->getBoundingBox();
-				bool isHit = boundingBox.containsPoint(bulletHit);
-				if (isHit) {  // もしも当たったら
+				Rect rareBoundingBox = rare->getBoundingBox();
+				bool rareHit = rareBoundingBox.containsPoint(bulletHit);
+				if (rareHit) {  // もしも当たったら
 					deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
 					this->removeChild(bullet);
-					deletedEnemys.pushBack(enemy);
-					this->removeChild(enemy);
-					enemyBusted++;	
-					log("enemyBusted %d", enemyBusted);
-					log("popGuide %d", popGuide);
-					log("popTimer %d", popTimer);
-					_score += 100;
-					if (enemyBusted >= 15 && popGuide > 10){
-						popGuide -= 10;
-
-					}
-					if (enemyBusted == 15)
-					{
-						_score *= 2;
-						enemyBusted = 0;
+					deletedEnemys.pushBack(rare);
+					this->removeChild(rare);
+					_score += 500;
+					_score *= 2;
+					enemyBusted++;
+					if (enemyBusted >= 10 && popGuide > 5){
+						popGuide -= 5;
 						CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
 
+						enemyBusted = 0;
 					}
 
+
 					_scoreLabel->setString(StringUtils::toString(_score));
-					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("hit_se.wav");
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("rare_se.wav");
 
 
 				}
 			}
+
+		}
 	}
 	//log("check_bullets %d", _bullets.size());
 	for (Bullet * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
-		log("delete_bullets %d", _bullets.size());
 		_bullets.eraseObject(bullet); // 1つずつ_bulletsから消していく
 	}
 	deletedBullets.clear(); // 最後に消す予定リストを全部消す
 
 	//消す敵リストに突っ込む
 	for (Enemy * enemy : deletedEnemys) {
-		log("delete_enemys %d", _enemys.size());
-		_enemys.eraseObject(enemy);
+	
+		_zako.eraseObject(enemy);
+		_rare.eraseObject(enemy);
+
 	}
+
 	deletedEnemys.clear();
 
 }
@@ -194,17 +247,22 @@ void MainScene::onResult(){
 	auto title_normal = Sprite::create("title.png");
 	auto title_press = Sprite::create("title_press.png");
 
-	//リプレイボタンの処理
+	//リプレイボタンのstop
 	auto replayButton = MenuItemSprite::create(replay_normal, replay_press , [](Ref* ref)
 	{
 		auto scene = MainScene::createScene();
 		Director::getInstance()->replaceScene(scene);
+		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
 	});
 
-	//タイトルボタンの処理
+	//タイトルボタンのstop
 	auto titleButton = MenuItemSprite::create(title_normal, title_press, [](Ref* ref)
 	{
-
+		auto scene = TitleScene::createScene();
+		auto transition = TransitionFade::create(1.0f, scene);
+		Director::getInstance()->replaceScene(transition);
+		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("rare_se.wav");
+		CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 	});
 	replay_normal->getTexture()->setAliasTexParameters();
 	replay_press->getTexture()->setAliasTexParameters();
@@ -238,12 +296,12 @@ bool MainScene::init()
 	this->setStage(stage);
 
 	auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "arial", 16);
-	scoreLabel->setPosition(Vec2(600, 440));
+	scoreLabel->setPosition(Vec2(580, 440));
 	this->setScoreLabel(scoreLabel);
 	this->addChild(_scoreLabel);
 
 	auto scoreHeader = Label::createWithSystemFont("Score", "arial", 16);
-	scoreHeader->setPosition(Vec2(580, 460));
+	scoreHeader->setPosition(Vec2(560, 460));
 	this->addChild(scoreHeader);
 
 	auto lifeLabel = Label::createWithSystemFont(StringUtils::toString(_life), "arial", 16);
@@ -269,76 +327,78 @@ bool MainScene::init()
 	kawaztan->setScale(2.0f);
 
 
-	//cocos2d::EventListenerKeyboard型のポインタ変数keyboardListenerを宣言し、EventListenerKeyboard::createを代入
-	auto keyboardListener = EventListenerKeyboard::create();
-	//キーボードが押された時の処理を書く関数？
-	//詳細よくわからない
-	keyboardListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event *event) {
-
-		//もし押されたキーがスペースキーだったら
-		if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
-			Bullet *bullet = _player->shoot();
-			this->addChild(bullet);
-			_bullets.pushBack(bullet);
-		}
-
-
-		//もし押されたキーが←だったら
-		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_A) {
-			//X方向の速度を-1にする
-			_velocity.x = -1;
+		//cocos2d::EventListenerKeyboard型のポインタ変数keyboardListenerを宣言し、EventListenerKeyboard::createを代入
+		auto keyboardListener = EventListenerKeyboard::create();
+		//キーボードが押された時のstopを書く関数？
+		//詳細よくわからない
+		keyboardListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event *event) {
+			if (_state == GameState::PLAYING){
+				//もし押されたキーがスペースキーだったら
+				if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
+					Bullet *bullet = _player->shoot();
+					this->addChild(bullet);
+					_bullets.pushBack(bullet);
+				}
 
 
-		}
-		//そうではなくもし、キーが→だったら
-		else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_D) {
-			//X方向の速度を1にする
-			_velocity.x = 1;
+				//もし押されたキーが←だったら
+				if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_A) {
+					//X方向の速度を-1にする
+					_velocity.x = -1;
 
-		}
-		//もし押されたキーが↑だったら
-		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW || keyCode == EventKeyboard::KeyCode::KEY_W) {
 
-			//Y方向の速度を1にする
-			_velocity.y = 1;
-			
-			//playAnimation(int index)の変数indexに1を代入
-			//上方向へのアニメーションを再生
-			_player->playAnimation(1);
+				}
+				//そうではなくもし、キーが→だったら
+				else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_D) {
+					//X方向の速度を1にする
+					_velocity.x = 1;
 
-		}
-		//そうではなくもし押されたキーが↓だったら
-		else if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW || keyCode == EventKeyboard::KeyCode::KEY_S) {
-			//Y方向の速度を-1にする
-			_velocity.y = -1;
-			//playAnimation(int index)の変数indexに2を代入
-			//下方向へのアニメーションを再生
-			_player->playAnimation(2);
-		}
-	};
+				}
+				//もし押されたキーが↑だったら
+				if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW || keyCode == EventKeyboard::KeyCode::KEY_W) {
 
-	//たぶんキーを離した時の処理　詳細わかんない
-	keyboardListener->onKeyReleased = [this](EventKeyboard::KeyCode keyCode, Event *event) {
-		//もしも離されたキーが←、または→だったら
-		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
-			//X方向の速度を0に戻す
-			_velocity.x = 0.0f;
-		}
-		//もしも離されたキーが↑、または↓だったら
-		if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW || keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
-			//X方向の速度を0に戻す
-			_velocity.y = 0.0f;
-			//playAnimation(int index)の変数indexに0を代入
-			//アニメーションを待機、横移動のものへ戻す
-			_player->playAnimation(0);
-		}
+					//Y方向の速度を1にする
+					_velocity.y = 1;
 
-	};
+					//playAnimation(int index)の変数indexに1を代入
+					//上方向へのアニメーションを再生
+					_player->playAnimation(1);
 
-	//キーボードの処理を書いた後のおまじないみたいなもの。
-	//(ぎぎさんのコメントより抜粋→)EventListenerってのにキーを押したときとか、話したときみたいな処理を紐付けておいて
-	//最後にEventDispatcherっていうものに、今作ったEventListenerを登録して、「よしなにお願いします」って伝える処理
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+				}
+				//そうではなくもし押されたキーが↓だったら
+				else if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW || keyCode == EventKeyboard::KeyCode::KEY_S) {
+					//Y方向の速度を-1にする
+					_velocity.y = -1;
+					//playAnimation(int index)の変数indexに2を代入
+					//下方向へのアニメーションを再生
+					_player->playAnimation(2);
+				}
+			};
+		};
+		//たぶんキーを離した時のstop　詳細わかんない
+		keyboardListener->onKeyReleased = [this](EventKeyboard::KeyCode keyCode, Event *event) {
+			//もしも離されたキーが←、または→だったら
+			if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW || keyCode == EventKeyboard::KeyCode::KEY_A || keyCode == EventKeyboard::KeyCode::KEY_D)
+			{
+				//X方向の速度を0に戻す
+				_velocity.x = 0.0f;
+			}
+			//もしも離されたキーが↑、または↓だったら
+			if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW || keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW || keyCode == EventKeyboard::KeyCode::KEY_W || keyCode == EventKeyboard::KeyCode::KEY_S)
+			{
+				//X方向の速度を0に戻す
+				_velocity.y = 0.0f;
+				//playAnimation(int index)の変数indexに0を代入
+				//アニメーションを待機、横移動のものへ戻す
+				_player->playAnimation(0);
+			}
+
+		};
+
+		//キーボードのstopを書いた後のおまじないみたいなもの。
+		//(ぎぎさんのコメントより抜粋→)EventListenerってのにキーを押したときとか、話したときみたいなstopを紐付けておいて
+		//最後にEventDispatcherっていうものに、今作ったEventListenerを登録して、「よしなにお願いします」って伝えるstop
+		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
 	// 上記の通りアニメーションを初期化
 	_player ->playAnimation(0);
@@ -348,7 +408,7 @@ bool MainScene::init()
 
 
 
-	//初期化処理
+	//初期化stop
 	return true;
 }
 

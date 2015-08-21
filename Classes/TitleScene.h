@@ -12,9 +12,13 @@ protected:
 	TitleScene();
 	virtual ~TitleScene();
 	bool init() override;
+	//@voidŒ^‚Ì’·‚¢–¼‘O‚ÌŠÖ”‚ÌéŒ¾
+	void onEnterTransitionDidFinish() override;
+
 public:
 	static cocos2d::Scene* createScene();
 	void gameStart();
+	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _howto, Howto);
 
 	CREATE_FUNC(TitleScene);
 };

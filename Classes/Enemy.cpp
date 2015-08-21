@@ -12,6 +12,64 @@ void Enemy::update(float dt)
 
 }
 
+bool ZakoEnemy::init()
+{
+	if (!Sprite::initWithFile("enemy.png"))
+	{
+		//返り値にfalseを返す
+		return false;
+	}
+	// cocos2d::Size型のZakoframeSize変数で表示する弾のスプライトのサイズを指定？
+	//詳細は上部frameSizeにて
+	auto ZakoframeSize = Size(32.0, 32.0);
+
+	//playAnimation(int index)とアニメーションの切り替えがない以外は同じ
+	this->setTextureRect(Rect(0, 0, ZakoframeSize.width, ZakoframeSize.height));
+	Vector<SpriteFrame*> Zakoframes;
+	for (int j = 0; j < EFRAME_COUNT; ++j)
+	{
+		auto Zakoframe = SpriteFrame::create("enemy.png", Rect(ZakoframeSize.width * j, 0, ZakoframeSize.width, ZakoframeSize.height));
+		Zakoframes.pushBack(Zakoframe);
+	}
+
+	auto Zakoanimation = Animation::createWithSpriteFrames(Zakoframes);
+	Zakoanimation->setDelayPerUnit(0.1);
+	auto Zakoanimate = RepeatForever::create(Animate::create(Zakoanimation));
+	this->runAction(Zakoanimate);
+	auto enemyMove = MoveTo::create(4, Vec2(-600, 0));
+	this->runAction(enemyMove);
+
+	return true;
+}
+
+bool RareEnemy::init()
+{
+	if ( !Sprite::initWithFile("boss.png"))
+	{
+		//返り値にfalseを返す
+		return false;
+	}
+	auto RareframeSize = Size(32.0, 32.0);
+
+	//playAnimation(int index)とアニメーションの切り替えがない以外は同じ
+	this->setTextureRect(Rect(0, 0, RareframeSize.width, RareframeSize.height));
+	Vector<SpriteFrame*> Rareframes;
+	for (int bj = 0; bj < EFRAME_COUNT; ++bj)
+	{
+		auto Rareframe = SpriteFrame::create("boss.png", Rect(RareframeSize.width * bj, 0, RareframeSize.width, RareframeSize.height));
+		Rareframes.pushBack(Rareframe);
+	}
+
+	auto Rareanimation = Animation::createWithSpriteFrames(Rareframes);
+	Rareanimation->setDelayPerUnit(0.1);
+	auto Rareanimate = RepeatForever::create(Animate::create(Rareanimation));
+	this->runAction(Rareanimate);
+	auto RareMove = MoveTo::create(2, Vec2(-600, 0));
+	this->runAction(RareMove);
+
+	return true;
+}
+
 bool Enemy::init(){
 	//もしbullet.pngみつからなかったら
 	if (!Sprite::initWithFile("enemy.png"))
@@ -19,25 +77,7 @@ bool Enemy::init(){
 		//返り値にfalseを返す
 		return false;
 	}
-	// cocos2d::Size型のEframeSize変数で表示する弾のスプライトのサイズを指定？
-	//詳細は上部frameSizeにて
-	auto EframeSize = Size(32.0, 32.0);
 
-	//playAnimation(int index)とアニメーションの切り替えがない以外は同じ
-	this->setTextureRect(Rect(0, 0, EframeSize.width, EframeSize.height));
-	Vector<SpriteFrame*> Eframes;
-	for (int j = 0; j < EFRAME_COUNT; ++j)
-	{
-		auto Eframe = SpriteFrame::create("enemy.png", Rect(EframeSize.width * j, 0, EframeSize.width, EframeSize.height));
-		Eframes.pushBack(Eframe);
-	}
-
-	auto Banimation = Animation::createWithSpriteFrames(Eframes);
-	Banimation->setDelayPerUnit(0.1);
-	auto Banimate = RepeatForever::create(Animate::create(Banimation));
-	this->runAction(Banimate);
-	auto enemyMove = MoveTo::create(4, Vec2(-600,0 ) );
-	this->runAction(enemyMove);
 	//毎フレーム更新
 	this->scheduleUpdate();
 	//返り値にtrueを返す

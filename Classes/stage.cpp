@@ -17,22 +17,38 @@ Stage::~Stage()
 }
 //bool型のStage::init()関数を宣言
 
-Enemy * Stage::popEnemy()
+Enemy* Stage::popZako()
 {
-	float enemyY = RandomHelper::random_real<float>(80, 400);
-
+	float zakoY = RandomHelper::random_real<float>(80, 400);
 	//Enemyクラスのポインタ変数enemyを作る
-	Enemy *enemy = Enemy::create();
+	Enemy *zakoenemy = ZakoEnemy::create();
 	//enemyをX540,Y240の位置にセットする
-	enemy->setPosition(Vec2(540, enemyY));
+	zakoenemy->setPosition(Vec2(540, zakoY));
 	//取得したenemyのテクスチャに対して設定を与えている
-	enemy->getTexture()->setAliasTexParameters();
+	zakoenemy->getTexture()->setAliasTexParameters();
 	//enemyの表示サイズを2倍にする
-	enemy->setScale(2.0f);
+	zakoenemy->setScale(2.0f);
 	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("pop_se.wav");
 
-	//戻り値にbulletを返す
-	return enemy;
+	//戻り値にzakoenemyを返す
+	return zakoenemy;
+}
+Enemy* Stage::popRare()
+{
+	float rareY = RandomHelper::random_real<float>(80, 400);
+	//Enemyクラスのポインタ変数enemyを作る
+	Enemy *rareenemy = RareEnemy::create();
+	//enemyをX540,Y240の位置にセットする
+	rareenemy->setPosition(Vec2(540, rareY));
+	//取得したenemyのテクスチャに対して設定を与えている
+	rareenemy->getTexture()->setAliasTexParameters();
+	//enemyの表示サイズを2倍にする
+	rareenemy->setScale(1.0f);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("pop_se.wav");
+
+	//戻り値にrereenemyを返す
+	return rareenemy;
+
 }
 
 bool Stage::init()
@@ -61,6 +77,7 @@ bool Stage::init()
 	background->getTileGIDAt(Vec2(x, y));
 	yuka->getTileAt(Vec2(x, y));
 	yuka->getTileGIDAt(Vec2(x, y));
+
 
 	//Stageクラスの表示場所を指定
 	this->setPosition(320, 240);

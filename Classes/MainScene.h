@@ -39,6 +39,10 @@ protected:
 	int popGuide;
 	//敵を倒した数の変数
 	int enemyBusted;
+	
+	//レア敵出現の乱数用
+	int enemy_pop;
+
 	//クラス外からでも参照できる
 public:
 	
@@ -49,7 +53,12 @@ public:
 	cocos2d::Vector<Bullet *> deletedBullets;
 
 	// Enemyが格納できるポインタ配列（？）、_enemysを定義する
-	cocos2d::Vector<Enemy *> _enemys;
+	cocos2d::Vector<Enemy *> _zako;
+
+
+	// Enemyが格納できるポインタ配列（？）、_enemysを定義する
+	cocos2d::Vector<Enemy *> _rare;
+
 
 	// 消す予定の敵リストを作る
 	cocos2d::Vector<Enemy *> deletedEnemys;
@@ -74,7 +83,7 @@ public:
 	CC_SYNTHESIZE_RETAIN(Stage* , _stage, Stage);
 	CC_SYNTHESIZE_RETAIN(Player*, _player, Player);
 
-	CC_SYNTHESIZE(int, _score, Score);
+	CC_SYNTHESIZE(long, _score, Score);
 	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _scoreLabel, ScoreLabel);
 	
 	CC_SYNTHESIZE(int, _life, Life);

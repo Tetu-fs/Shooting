@@ -15,6 +15,7 @@ Scene *TitleScene::createScene()
 }
 
 TitleScene::TitleScene()
+	: _howto(nullptr)
 {
 
 }
@@ -22,6 +23,12 @@ TitleScene::TitleScene()
 TitleScene::~TitleScene()
 {
 
+		CC_SAFE_RELEASE_NULL(_howto);
+}
+void TitleScene::onEnterTransitionDidFinish()
+{
+	Layer::onEnterTransitionDidFinish();
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("title_loop.wav", true);
 }
 
 bool TitleScene::init()
@@ -38,6 +45,17 @@ bool TitleScene::init()
 	logo->setScale(2.0f);
 	this->addChild(logo);
 
+	auto HowToMove = Label::createWithSystemFont("Move : ArrowKey or WASD", "arial", 18);
+	HowToMove->setPosition(Vec2(320, 260));
+	this->addChild(HowToMove);
+
+	auto HowToShot = Label::createWithSystemFont("Shot : Space", "arial", 18);
+	HowToShot->setPosition(Vec2(320, 220));
+	this->addChild(HowToShot);
+
+	auto ClickStart = Label::createWithSystemFont("Click to Start", "arial", 24);
+	ClickStart->setPosition(Vec2(320, 160));
+	this->addChild(ClickStart);
 	//ゲームスタートボタン処理
 	auto start = Sprite::create("start.png");
 	start->setPosition(Vec2(320, 80));
@@ -45,6 +63,7 @@ bool TitleScene::init()
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [this](Touch* touch, Event* event){
 		log("touch");
+		CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 
 		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
 		this->getEventDispatcher()->removeAllEventListeners();
