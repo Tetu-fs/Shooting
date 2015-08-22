@@ -29,9 +29,9 @@ public:
 	void update(float dt) override;
 
 	//Eenmy型StageクラスのpopZakoメソッドを宣言
-	Enemy* Stage::popZako();
+	Enemy* popZako();
 	//Eenmy型StageクラスのpopRareメソッドを宣言
-	Enemy* Stage::popRare();
+	Enemy* popRare();
 
 	//Tile
 	//TMXTiledMapという型をつくり、Stageクラスのprivate変数_tiledMapを作り、getTledMap/setTledMapをつくる

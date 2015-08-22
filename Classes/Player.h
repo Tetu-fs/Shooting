@@ -29,7 +29,7 @@ public:
 	void update(float dt)override;
 
 	//Bullet型Playerクラスのshootメソッドを宣言
-	Bullet* Player::shoot();
+	Bullet* shoot();
 
 
 	// void型のplayAnimation(int index)という関数の宣言　overrideはおまじない。
