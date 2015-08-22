@@ -1,46 +1,46 @@
-//‚à‚µdefine‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î
+//ã‚‚ã—defineã•ã‚Œã¦ã„ãªã‘ã‚Œã°
 #ifndef __MyGame__stage__
-//ƒRƒ“ƒpƒCƒ‹‚É’u‚«Š·‚¦‚é@ƒCƒ“ƒNƒ‹[ƒhƒK[ƒh‚Æ‚¢‚¤‚ç‚µ‚¢B
-//ifndef‚Æendif‚ÌŠÔ‚É‹²‚Ş‚ÆƒGƒ‰[‚ªo‚È‚­‚È‚é‚¨‚Ü‚¶‚È‚¢B
+//ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ç½®ãæ›ãˆã‚‹ã€€ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã‚¬ãƒ¼ãƒ‰ã¨ã„ã†ã‚‰ã—ã„ã€‚
+//ifndefã¨endifã®é–“ã«æŒŸã‚€ã¨ã‚¨ãƒ©ãƒ¼ãŒå‡ºãªããªã‚‹ãŠã¾ã˜ãªã„ã€‚
 #define __MyGame__stage__
-//cocos2d.h‚ğ‚æ‚Ş
+//cocos2d.hã‚’ã‚ˆã‚€
 #include "cocos2d.h"
 #include "Enemy.h"
 #include "SimpleAudioEngine.h"
 
-//cocos2d::LayerƒNƒ‰ƒX‚ÌƒpƒuƒŠƒbƒN‚ÅŒp³ƒNƒ‰ƒXStage‚ğì‚é
+//cocos2d::Layerã‚¯ãƒ©ã‚¹ã®ãƒ‘ãƒ–ãƒªãƒƒã‚¯ã§ç¶™æ‰¿ã‚¯ãƒ©ã‚¹Stageã‚’ä½œã‚‹
 class Stage :public cocos2d::Layer
 {
-	//StageƒNƒ‰ƒX“à‚Å‚Ì‚İ
+	//Stageã‚¯ãƒ©ã‚¹å†…ã§ã®ã¿
 protected:
-	//StageƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÌéŒ¾
+	//Stageã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å®£è¨€
 	Stage();
-	//StageƒfƒXƒgƒ‰ƒNƒ^‚ÌéŒ¾@virtual‚Í‚¨‚Ü‚¶‚È‚¢
+	//Stageãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å®£è¨€ã€€virtualã¯ãŠã¾ã˜ãªã„
 	virtual ~Stage();
 
-	//boolŒ^‚Ìinit()ŠÖ”‚ÌéŒ¾ override‚Í‚¨‚Ü‚¶‚È‚¢
-	//CREATE_FUNC()‚É•K{
+	//boolå‹ã®init()é–¢æ•°ã®å®£è¨€ overrideã¯ãŠã¾ã˜ãªã„
+	//CREATE_FUNC()ã«å¿…é ˆ
 	bool init() override;
 
 
-	//ƒNƒ‰ƒXŠO‚©‚ç‚Å‚àQÆ‰Â”\
+	//ã‚¯ãƒ©ã‚¹å¤–ã‹ã‚‰ã§ã‚‚å‚ç…§å¯èƒ½
 public:
-	//voidŒ^‚Ìupdate(float dt)ŠÖ”‚ÌéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢
+	//voidå‹ã®update(float dt)é–¢æ•°ã®å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„
 	void update(float dt) override;
 
-	//EenmyŒ^StageƒNƒ‰ƒX‚ÌpopZakoƒƒ\ƒbƒh‚ğéŒ¾
+	//Eenmyå‹Stageã‚¯ãƒ©ã‚¹ã®popZakoãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®£è¨€
 	Enemy* Stage::popZako();
-	//EenmyŒ^StageƒNƒ‰ƒX‚ÌpopRareƒƒ\ƒbƒh‚ğéŒ¾
+	//Eenmyå‹Stageã‚¯ãƒ©ã‚¹ã®popRareãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®£è¨€
 	Enemy* Stage::popRare();
 
 	//Tile
-	//TMXTiledMap‚Æ‚¢‚¤Œ^‚ğ‚Â‚­‚èAStageƒNƒ‰ƒX‚Ìprivate•Ï”_tiledMap‚ğì‚èAgetTledMap/setTledMap‚ğ‚Â‚­‚é
-	//‚±‚±‚Å‚Â‚­‚ç‚ê‚½TMXTiledMapŒ^‚Ì•Ï”‚Íƒ|ƒCƒ“ƒ^•Ï”‚É‚È‚é
-	//getTledMap‚Í_tiledMap‚ğæ“¾‚µAsetTledMap‚Í_tiledMap‚ğ‘‚«Š·‚¦‚ç‚ê‚é
+	//TMXTiledMapã¨ã„ã†å‹ã‚’ã¤ãã‚Šã€Stageã‚¯ãƒ©ã‚¹ã®privateå¤‰æ•°_tiledMapã‚’ä½œã‚Šã€getTledMap/setTledMapã‚’ã¤ãã‚‹
+	//ã“ã“ã§ã¤ãã‚‰ã‚ŒãŸTMXTiledMapå‹ã®å¤‰æ•°ã¯ãƒã‚¤ãƒ³ã‚¿å¤‰æ•°ã«ãªã‚‹
+	//getTledMapã¯_tiledMapã‚’å–å¾—ã—ã€setTledMapã¯_tiledMapã‚’æ›¸ãæ›ãˆã‚‰ã‚Œã‚‹
 	CC_SYNTHESIZE_RETAIN(cocos2d::TMXTiledMap *, _tiledMap, TiledMap);
 
-	//static Stage* create()‚Æ“¯‚¶ˆÓ–¡Bbool init();‚ª•K—v
-	//StageƒNƒ‰ƒXƒCƒ“ƒXƒ^ƒ“ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·StageƒNƒ‰ƒX‚ÌƒNƒ‰ƒXƒƒ\ƒbƒhAcreate‚ğéŒ¾‚µ‚Ä‚¢‚é
+	//static Stage* create()ã¨åŒã˜æ„å‘³ã€‚bool init();ãŒå¿…è¦
+	//Stageã‚¯ãƒ©ã‚¹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™Stageã‚¯ãƒ©ã‚¹ã®ã‚¯ãƒ©ã‚¹ãƒ¡ã‚½ãƒƒãƒ‰ã€createã‚’å®£è¨€ã—ã¦ã„ã‚‹
 	CREATE_FUNC(Stage);
 };
 

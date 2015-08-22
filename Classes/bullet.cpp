@@ -1,12 +1,12 @@
 #include "bullet.h"
-//–¼‘O‹óŠÔcocos2d‚ğ‚µ‚æ‚¤‚·‚é‚Æ‚¢‚¤éŒ¾
+//åå‰ç©ºé–“cocos2dã‚’ã—ã‚ˆã†ã™ã‚‹ã¨ã„ã†å®£è¨€
 USING_NS_CC;
 
-//’è”FRAME_COUNT‚ğéŒ¾A‰Šú‰»
+//å®šæ•°FRAME_COUNTã‚’å®£è¨€ã€åˆæœŸåŒ–
 const int BFRAME_COUNT = 2;
 
-//voidŒ^‚ÌBullet::update(float dt)ŠÖ”‚ğéŒ¾
-//–ˆƒtƒŒ[ƒ€XV‚µ‚½‚¢•¨‚ğ‚Â‚Á‚±‚ŞH
+//voidå‹ã®Bullet::update(float dt)é–¢æ•°ã‚’å®£è¨€
+//æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°ã—ãŸã„ç‰©ã‚’ã¤ã£ã“ã‚€ï¼Ÿ
 void Bullet::update(float dt)
 {
 	_Bvelocity.normalize();
@@ -14,19 +14,19 @@ void Bullet::update(float dt)
 	this->setPosition(this->getPosition() + _Bvelocity * BSPEED);
 
 }
-//boolŒ^‚ÌBullet::init()ŠÖ”‚ğéŒ¾
+//boolå‹ã®Bullet::init()é–¢æ•°ã‚’å®£è¨€
 bool Bullet::init(){
-	//‚à‚µbullet.png‚İ‚Â‚©‚ç‚È‚©‚Á‚½‚ç
+	//ã‚‚ã—bullet.pngã¿ã¤ã‹ã‚‰ãªã‹ã£ãŸã‚‰
 	if (!Sprite::initWithFile("bullet.png"))
 	{
-		//•Ô‚è’l‚Éfalse‚ğ•Ô‚·
+		//è¿”ã‚Šå€¤ã«falseã‚’è¿”ã™
 		return false;
 	}
-	// cocos2d::SizeŒ^‚ÌBframeSize•Ï”‚Å•\¦‚·‚é’e‚ÌƒXƒvƒ‰ƒCƒg‚ÌƒTƒCƒY‚ğw’èH
-	//Ú×‚Íã•”frameSize‚É‚Ä
+	// cocos2d::Sizeå‹ã®BframeSizeå¤‰æ•°ã§è¡¨ç¤ºã™ã‚‹å¼¾ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚µã‚¤ã‚ºã‚’æŒ‡å®šï¼Ÿ
+	//è©³ç´°ã¯ä¸Šéƒ¨frameSizeã«ã¦
 	auto BframeSize = Size(16.0, 16.0);
 
-	//playAnimation(int index)‚ÆƒAƒjƒ[ƒVƒ‡ƒ“‚ÌØ‚è‘Ö‚¦‚ª‚È‚¢ˆÈŠO‚Í“¯‚¶
+	//playAnimation(int index)ã¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆ‡ã‚Šæ›¿ãˆãŒãªã„ä»¥å¤–ã¯åŒã˜
 	this->setTextureRect(Rect(0, 0, BframeSize.width, BframeSize.height));
 	Vector<SpriteFrame*> Bframes;
 	for (int j = 0; j < BFRAME_COUNT; ++j)
@@ -41,8 +41,8 @@ bool Bullet::init(){
 	this->runAction(Banimate);
 
 	_Bvelocity.x = 1;
-	//–ˆƒtƒŒ[ƒ€XV
+	//æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°
 	this->scheduleUpdate();
-	//•Ô‚è’l‚Étrue‚ğ•Ô‚·
+	//è¿”ã‚Šå€¤ã«trueã‚’è¿”ã™
 	return true;
 }

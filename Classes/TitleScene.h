@@ -1,7 +1,7 @@
-//‚à‚µdefine‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î
+//ã‚‚ã—defineã•ã‚Œã¦ã„ãªã‘ã‚Œã°
 #ifndef __MyGame__TitleScene__
-//ƒRƒ“ƒpƒCƒ‹‚É’u‚«Š·‚¦‚é@ƒCƒ“ƒNƒ‹[ƒhƒK[ƒh‚Æ‚¢‚¤‚ç‚µ‚¢B
-//ifndef‚Æendif‚ÌŠÔ‚É‹²‚Ş‚ÆƒGƒ‰[‚ªo‚È‚­‚È‚é‚¨‚Ü‚¶‚È‚¢B
+//ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ç½®ãæ›ãˆã‚‹ã€€ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã‚¬ãƒ¼ãƒ‰ã¨ã„ã†ã‚‰ã—ã„ã€‚
+//ifndefã¨endifã®é–“ã«æŒŸã‚€ã¨ã‚¨ãƒ©ãƒ¼ãŒå‡ºãªããªã‚‹ãŠã¾ã˜ãªã„ã€‚
 #define __MyGame___TitleScene__
 
 #include "cocos2d.h"
@@ -12,7 +12,7 @@ protected:
 	TitleScene();
 	virtual ~TitleScene();
 	bool init() override;
-	//@voidŒ^‚Ì’·‚¢–¼‘O‚ÌŠÖ”‚ÌéŒ¾
+	//ã€€voidå‹ã®é•·ã„åå‰ã®é–¢æ•°ã®å®£è¨€
 	void onEnterTransitionDidFinish() override;
 
 public:

@@ -1,25 +1,25 @@
-// cocos2d.h‚ğ“Ç‚Ş
+// cocos2d.hã‚’èª­ã‚€
 #include "cocos2d.h"
 
-//Sprite‚ğŒp³‚µ‚½BulletƒNƒ‰ƒX‚ğì‚é
+//Spriteã‚’ç¶™æ‰¿ã—ãŸBulletã‚¯ãƒ©ã‚¹ã‚’ä½œã‚‹
 class Bullet : public cocos2d::Sprite
 {
-	//Bullet‚Ì’†‚Å‚Ì‚İ
+	//Bulletã®ä¸­ã§ã®ã¿
 protected:
 
-	//CREATE_FUNC‚ğg—p‚·‚é‚Ì‚É•K—v
-	//boolŒ^‚ÌinitŠÖ”‚ğéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	//CREATE_FUNCã‚’ä½¿ç”¨ã™ã‚‹ã®ã«å¿…è¦
+	//boolå‹ã®inité–¢æ•°ã‚’å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	bool init() override;
 
-	//ƒNƒ‰ƒXŠO‚Å‚àQÆ‚Å‚«‚é
+	//ã‚¯ãƒ©ã‚¹å¤–ã§ã‚‚å‚ç…§ã§ãã‚‹
 public:
-	// voidŒ^‚Ìupdate(float dt)‚Æ‚¢‚¤ŠÖ”‚ÌéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	// voidå‹ã®update(float dt)ã¨ã„ã†é–¢æ•°ã®å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	void update(float dt)override;
 
-	//_Bvelocity‚Í’e‚Ì‘¬“x‚ğ•\‚·
-	cocos2d::Vec2 _Bvelocity; // ’e‚ÌˆÚ“®—Ê
+	//_Bvelocityã¯å¼¾ã®é€Ÿåº¦ã‚’è¡¨ã™
+	cocos2d::Vec2 _Bvelocity; // å¼¾ã®ç§»å‹•é‡
 
-	//auto Bullet = Bullet::create(); ‚Æ“¯‚¶ˆÓ–¡Bbool init();‚ª•K—v
-	//ã‹L‚ÍBulletŒ^‚Ì*Bullet‚Æ‚¢‚¤ƒ|ƒCƒ“ƒ^•Ï”‚ÉBullet::create()‚ğ‘ã“ü‚µ‚Ä‚¢‚é
+	//auto Bullet = Bullet::create(); ã¨åŒã˜æ„å‘³ã€‚bool init();ãŒå¿…è¦
+	//ä¸Šè¨˜ã¯Bulletå‹ã®*Bulletã¨ã„ã†ãƒã‚¤ãƒ³ã‚¿å¤‰æ•°ã«Bullet::create()ã‚’ä»£å…¥ã—ã¦ã„ã‚‹
 	CREATE_FUNC(Bullet);
 };

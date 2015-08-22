@@ -1,43 +1,43 @@
-// cocos2d.h‚ğ“Ç‚Ş
+// cocos2d.hã‚’èª­ã‚€
 #include "cocos2d.h"
 #include "bullet.h"
 
-//Sprite‚ğŒp³‚µ‚½PlayerƒNƒ‰ƒX‚ğì‚é
+//Spriteã‚’ç¶™æ‰¿ã—ãŸPlayerã‚¯ãƒ©ã‚¹ã‚’ä½œã‚‹
 class Player : public cocos2d::Sprite
 {
-	//Player‚Ì’†‚Å‚Ì‚İ
+	//Playerã®ä¸­ã§ã®ã¿
 protected:
 	
-	//CREATE_FUNC‚ğg—p‚·‚é‚Ì‚É•K—v
-	//boolŒ^‚ÌinitŠÖ”‚ğéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	//CREATE_FUNCã‚’ä½¿ç”¨ã™ã‚‹ã®ã«å¿…è¦
+	//boolå‹ã®inité–¢æ•°ã‚’å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	bool init() override;
 
-	//®”‚ğˆµ‚¦‚éintŒ^‚ÌindexCheck‚Æ‚¢‚¤•Ï”‚ğéŒ¾
+	//æ•´æ•°ã‚’æ‰±ãˆã‚‹intå‹ã®indexCheckã¨ã„ã†å¤‰æ•°ã‚’å®£è¨€
 	int indexCheck;
 
-	//PlayerƒNƒ‰ƒX‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÌéŒ¾
+	//Playerã‚¯ãƒ©ã‚¹ã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å®£è¨€
 	Player();
-	//virtual‚Í‰¼‘zŠÖ”‚Æ‚¢‚¤‚¨‚Ü‚¶‚È‚¢@ƒfƒXƒgƒ‰ƒNƒ^‚ÌéŒ¾
+	//virtualã¯ä»®æƒ³é–¢æ•°ã¨ã„ã†ãŠã¾ã˜ãªã„ã€€ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å®£è¨€
 	virtual ~Player();
 
 
-	//ƒNƒ‰ƒXŠO‚Å‚àQÆ‚Å‚«‚é
+	//ã‚¯ãƒ©ã‚¹å¤–ã§ã‚‚å‚ç…§ã§ãã‚‹
 public:
 	
 
-	// voidŒ^‚Ìupdate(float dt)‚Æ‚¢‚¤ŠÖ”‚ÌéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	// voidå‹ã®update(float dt)ã¨ã„ã†é–¢æ•°ã®å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	void update(float dt)override;
 
-	//BulletŒ^PlayerƒNƒ‰ƒX‚Ìshootƒƒ\ƒbƒh‚ğéŒ¾
+	//Bulletå‹Playerã‚¯ãƒ©ã‚¹ã®shootãƒ¡ã‚½ãƒƒãƒ‰ã‚’å®£è¨€
 	Bullet* Player::shoot();
 
 
-	// voidŒ^‚ÌplayAnimation(int index)‚Æ‚¢‚¤ŠÖ”‚ÌéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
-	//“¯‚ÉintŒ^‚Ìindex‚Æ‚¢‚¤•Ï”‚àéŒ¾‚³‚ê‚Ä‚¢‚é
+	// voidå‹ã®playAnimation(int index)ã¨ã„ã†é–¢æ•°ã®å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
+	//åŒæ™‚ã«intå‹ã®indexã¨ã„ã†å¤‰æ•°ã‚‚å®£è¨€ã•ã‚Œã¦ã„ã‚‹
 	void playAnimation(int index);
 
-	//auto Player = Player::create(); ‚Æ“¯‚¶ˆÓ–¡Bbool init();‚ª•K—v
-	//ã‹L‚ÍPlayerŒ^‚Ì*Player‚Æ‚¢‚¤ƒ|ƒCƒ“ƒ^•Ï”‚ÉPlayer::create()‚ğ‘ã“ü‚µ‚Ä‚¢‚é
+	//auto Player = Player::create(); ã¨åŒã˜æ„å‘³ã€‚bool init();ãŒå¿…è¦
+	//ä¸Šè¨˜ã¯Playerå‹ã®*Playerã¨ã„ã†ãƒã‚¤ãƒ³ã‚¿å¤‰æ•°ã«Player::create()ã‚’ä»£å…¥ã—ã¦ã„ã‚‹
 	CREATE_FUNC(Player);
 
 };
