@@ -1,60 +1,60 @@
-// cocos2d.h‚ğ“Ç‚Ş
+// cocos2d.hã‚’èª­ã‚€
 #include "cocos2d.h"
 
-//Sprite‚ğŒp³‚µ‚½BulletƒNƒ‰ƒX‚ğì‚é
+//Spriteã‚’ç¶™æ‰¿ã—ãŸBulletã‚¯ãƒ©ã‚¹ã‚’ä½œã‚‹
 class Enemy : public cocos2d::Sprite
 {
-	//Bullet‚Ì’†‚Å‚Ì‚İ
+	//Bulletã®ä¸­ã§ã®ã¿
 protected:
 
-	//CREATE_FUNC‚ğg—p‚·‚é‚Ì‚É•K—v
-	//boolŒ^‚ÌinitŠÖ”‚ğéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	//CREATE_FUNCã‚’ä½¿ç”¨ã™ã‚‹ã®ã«å¿…è¦
+	//boolå‹ã®inité–¢æ•°ã‚’å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	bool init() override;
 
 
-	//ƒNƒ‰ƒXŠO‚Å‚àQÆ‚Å‚«‚é
+	//ã‚¯ãƒ©ã‚¹å¤–ã§ã‚‚å‚ç…§ã§ãã‚‹
 public:
 
-	// voidŒ^‚Ìupdate(float dt)‚Æ‚¢‚¤ŠÖ”‚ÌéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	// voidå‹ã®update(float dt)ã¨ã„ã†é–¢æ•°ã®å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	void update(float dt)override;
 
-	//auto Enemy = Enemy::create(); ‚Æ“¯‚¶ˆÓ–¡Bbool init();‚ª•K—v
-	//ã‹L‚ÍEnemyŒ^‚Ì*Enemy‚Æ‚¢‚¤ƒ|ƒCƒ“ƒ^•Ï”‚ÉEnemy::create()‚ğ‘ã“ü‚µ‚Ä‚¢‚é
+	//auto Enemy = Enemy::create(); ã¨åŒã˜æ„å‘³ã€‚bool init();ãŒå¿…è¦
+	//ä¸Šè¨˜ã¯Enemyå‹ã®*Enemyã¨ã„ã†ãƒã‚¤ãƒ³ã‚¿å¤‰æ•°ã«Enemy::create()ã‚’ä»£å…¥ã—ã¦ã„ã‚‹
 	CREATE_FUNC(Enemy);
 };
 
 class ZakoEnemy: public Enemy
 {
-	//ƒNƒ‰ƒX‚Ì’†‚Å‚Ì‚İ
+	//ã‚¯ãƒ©ã‚¹ã®ä¸­ã§ã®ã¿
 protected:
 
-	//CREATE_FUNC‚ğg—p‚·‚é‚Ì‚É•K—v
-	//boolŒ^‚ÌinitŠÖ”‚ğéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	//CREATE_FUNCã‚’ä½¿ç”¨ã™ã‚‹ã®ã«å¿…è¦
+	//boolå‹ã®inité–¢æ•°ã‚’å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	bool init() override;
 
 
-	//ƒNƒ‰ƒXŠO‚Å‚àQÆ‚Å‚«‚é
+	//ã‚¯ãƒ©ã‚¹å¤–ã§ã‚‚å‚ç…§ã§ãã‚‹
 public:
 
-	//auto Enemy = Enemy::create(); ‚Æ“¯‚¶ˆÓ–¡Bbool init();‚ª•K—v
-	//ã‹L‚ÍEnemyŒ^‚Ì*Enemy‚Æ‚¢‚¤ƒ|ƒCƒ“ƒ^•Ï”‚ÉEnemy::create()‚ğ‘ã“ü‚µ‚Ä‚¢‚é
+	//auto Enemy = Enemy::create(); ã¨åŒã˜æ„å‘³ã€‚bool init();ãŒå¿…è¦
+	//ä¸Šè¨˜ã¯Enemyå‹ã®*Enemyã¨ã„ã†ãƒã‚¤ãƒ³ã‚¿å¤‰æ•°ã«Enemy::create()ã‚’ä»£å…¥ã—ã¦ã„ã‚‹
 	CREATE_FUNC(ZakoEnemy);
 };
 
 class RareEnemy : public Enemy
 {
-	//ƒNƒ‰ƒX‚Ì’†‚Å‚Ì‚İ
+	//ã‚¯ãƒ©ã‚¹ã®ä¸­ã§ã®ã¿
 protected:
 
-	//CREATE_FUNC‚ğg—p‚·‚é‚Ì‚É•K—v
-	//boolŒ^‚ÌinitŠÖ”‚ğéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	//CREATE_FUNCã‚’ä½¿ç”¨ã™ã‚‹ã®ã«å¿…è¦
+	//boolå‹ã®inité–¢æ•°ã‚’å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	bool init() override;
 
 
-	//ƒNƒ‰ƒXŠO‚Å‚àQÆ‚Å‚«‚é
+	//ã‚¯ãƒ©ã‚¹å¤–ã§ã‚‚å‚ç…§ã§ãã‚‹
 public:
 
-	//auto Enemy = Enemy::create(); ‚Æ“¯‚¶ˆÓ–¡Bbool init();‚ª•K—v
-	//ã‹L‚ÍEnemyŒ^‚Ì*Enemy‚Æ‚¢‚¤ƒ|ƒCƒ“ƒ^•Ï”‚ÉEnemy::create()‚ğ‘ã“ü‚µ‚Ä‚¢‚é
+	//auto Enemy = Enemy::create(); ã¨åŒã˜æ„å‘³ã€‚bool init();ãŒå¿…è¦
+	//ä¸Šè¨˜ã¯Enemyå‹ã®*Enemyã¨ã„ã†ãƒã‚¤ãƒ³ã‚¿å¤‰æ•°ã«Enemy::create()ã‚’ä»£å…¥ã—ã¦ã„ã‚‹
 	CREATE_FUNC(RareEnemy);
 };

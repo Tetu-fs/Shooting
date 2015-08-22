@@ -56,7 +56,7 @@ bool TitleScene::init()
 	auto ClickStart = Label::createWithSystemFont("Click to Start", "arial", 24);
 	ClickStart->setPosition(Vec2(320, 160));
 	this->addChild(ClickStart);
-	//ゲームスタートボタン処理
+	//繧ｲ繝ｼ繝繧ｹ繧ｿ繝ｼ繝医�懊ち繝ｳ蜃ｦ逅�
 	auto start = Sprite::create("start.png");
 	start->setPosition(Vec2(320, 80));
 	this->addChild(start);

@@ -1,15 +1,15 @@
-//Player.h��ǂ�
+//Player.hを読む
 #include "Player.h"
 #include "SimpleAudioEngine.h"
 
-//���O���cocos2d�����悤����Ƃ����錾
+//名前空間cocos2dをしようするという宣言
 USING_NS_CC;
 
-//�萔FRAME_COUNT��錾�A������
+//定数FRAME_COUNTを宣言、初期化
 const int FRAME_COUNT = 2;
 
-//Player�N���X�̃R���X�g���N�^
-//��s�ڂŃw�b�_�[�Ő錾�����ϐ�indexCheck��������
+//Playerクラスのコンストラクタ
+//二行目でヘッダーで宣言した変数indexCheckを初期化
 Player::Player()
 	: indexCheck(-1)
 
@@ -20,104 +20,104 @@ Player::~Player()
 {
 }
 
-//void�^��Player::update(float dt)�֐���錾
-//���t���[���X�V���������������ށH
+//void型のPlayer::update(float dt)関数を宣言
+//毎フレーム更新したい物をつっこむ？
 void Player::update(float dt)
 {
 }
 
-//bool�^��Player::init()�֐���錾
+//bool型のPlayer::init()関数を宣言
 bool Player::init()
 {
 	int bulletCount = 0;
-	//����kawaz_shoothing.png��������Ȃ�������
+	//もしkawaz_shoothing.pngが見つからなかったら
 	if (!Sprite::initWithFile("kawaz_shooting.png"))
 	{
-		//�Ԃ�l��false��Ԃ�
+		//返り値にfalseを返す
 		return false;
 	}
 
-	//�Ԃ�l��true��Ԃ�
+	//返り値にtrueを返す
 	return true;
 }
 
 Bullet * Player::shoot()
 {
-	//Bullet�N���X�̃|�C���^�ϐ�bullet�𐶐�
+	//Bulletクラスのポインタ変数bulletを生成
 	Bullet *bullet = Bullet::create();
-	//bullet�̈ʒu��Player�̌��ݒn�ɐݒ�
+	//bulletの位置をPlayerの現在地に設定
 	bullet->setPosition(this->getPosition());
-	//bullet�Ɏ擾�����e�N�X�`����^����
+	//bulletに取得したテクスチャを与える
 	bullet->getTexture()->setAliasTexParameters();
-	//���ʉ����Ȃ炷
+	//効果音をならす
 	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("shot_se.wav");
-	//�߂�l��bullet��Ԃ�
+	//戻り値にbulletを返す
 	return bullet;
 }
 
 
-// 0~2�̃A�j���[�V�������Đ����郁�\�b�h(0�ʏ�A1��A2��)
-//void�^��Player::playAnimation(int index)�֐����쐬
+// 0~2のアニメーションを再生するメソッド(0通常、1上、2下)
+//void型のPlayer::playAnimation(int index)関数を作成
 void Player::playAnimation(int index) {
-	//�������ϐ�indexCheck�ƕϐ�index��������������
+	//もしも変数indexCheckと変数indexが等しかったら
 	if (indexCheck == index) {
-		//�����Ŋ֐��̏������I������
+		//ここで関数の処理を終了する
 		return;
 	}
 
-	// �A�j���[�V�����p�̃^�O���Œ�l�Œ�`
-	const int ACTION_TAG = 10000; // �D���Ȑ�
+	// アニメーション用のタグを固定値で定義
+	const int ACTION_TAG = 10000; // 好きな数
 
-	// ���ɃA�j���[�V�����������Ă�����~�߂�
-	// �A�j���[�V�����ɂ͑S��10000�̃^�O���t���Ă�͂��Ȃ̂ŁA�d�����Ȃ��悤�Ɏ~�߂�
+	// 既にアニメーションが動いていたら止める
+	// アニメーションには全て10000のタグが付いてるはずなので、重複しないように止める
 	this->stopActionByTag(ACTION_TAG);
 
-	// cocos2d::Size�^��frameSize�ϐ��ŕ\�����邩�킸����̃X�v���C�g�̃T�C�Y���w��H
-	//Size(frameSize.width, frameSize.height)�ɂ��ꂼ��16.0�������Ă���B�^��float
+	// cocos2d::Size型のframeSize変数で表示するかわずたんのスプライトのサイズを指定？
+	//Size(frameSize.width, frameSize.height)にそれぞれ16.0を代入している。型はfloat
 	auto frameSize = Size(16.0, 16.0);
 
-	//�H
-	//�X�v���C�g��X���W0�AY���W0(����)����A16x16��؂�o���H
-	//Rect��x,y,width,height��4���Ƃ��B��`�Ƃ����Ӗ�
+	//？
+	//スプライトのX座標0、Y座標0(左上)から、16x16を切り出す？
+	//Rectはx,y,width,heightの4つをとれる。矩形という意味
 	this->setTextureRect(Rect(0, 0, frameSize.width, frameSize.height));
 
-	//SpriteFrame*�Ƃ����e���v���[�g��frames�Ƃ����z���錾
+	//SpriteFrame*というテンプレートでframesという配列を宣言
 	Vector<SpriteFrame*> frames;
 
-	//�ϐ�i��錾�A0�ŏ�������i��FRAME_COUNT�����ł��鎞�A�ϐ�i��1�����Z��{}���̏������s�����[�v
-	//i��FRAME_COUNT�����łȂ��Ȃ������Ƀ��[�v�𔲂���
+	//変数iを宣言、0で初期化しiがFRAME_COUNT未満である時、変数iに1を加算し{}内の処理を行いループ
+	//iがFRAME_COUNT未満でなくなった時にループを抜ける
 	for (int i = 0; i < FRAME_COUNT; ++i)
 	{
-		// index�̒l�ɂ����y���W��ς���
-		//cocos2d::SpriteFrame�^�̃|�C���g�ϐ�frame��錾
-		//�摜kawaz_shooting.png��ǂ݁AframeSize.width��i������2�R�}�A�j���[�V�����̃��[�v
-		//index��16(frameSize.height�̒l)�������A�A�j���[�V������؂�ւ�
-		//frameSize.width��frameSize.height�ŕ\������摜�̑傫�����w��H
+		// indexの値によってy座標を変える
+		//cocos2d::SpriteFrame型のポイント変数frameを宣言
+		//画像kawaz_shooting.pngを読み、frameSize.widthにiをかけ2コマアニメーションのループ
+		//indexに16(frameSize.heightの値)をかけ、アニメーションを切り替え
+		//frameSize.widthとframeSize.heightで表示する画像の大きさを指定？
 		auto frame = SpriteFrame::create("kawaz_shooting.png", Rect(frameSize.width * i, index * 16, frameSize.width, frameSize.height));
 
-		//�z��frames�̏I����frame�̒l��}������
+		//配列framesの終わりにframeの値を挿入する
 		frames.pushBack(frame);
 	}
 
-	//cocos2d::Animation�^�̃|�C���^�ϐ�animation��錾
-	//�z��frames�������Ă���ۂ�����With�Ȃ񂿂�炪�悭�킩��Ȃ�
+	//cocos2d::Animation型のポインタ変数animationを宣言
+	//配列framesを代入してるっぽいけどWithなんちゃらがよくわからない
 	auto animation = Animation::createWithSpriteFrames(frames);
 
-	//�|�C���^�ϐ�animation�̕\���Ԋu��0.05�b�ɂ���
+	//ポインタ変数animationの表示間隔を0.05秒にする
 	animation->setDelayPerUnit(0.05);
 
-	//cocos2d::RepeatForever�^�̃|�C���^�ϐ�animate��錾�@�Ȃ񂩈ł��ۂ�
-	//Animate::create(animation)��animation�Ő錾���ꂽ2�R�}�A�j���𐶐����Ă�Ƃ�����
-	//RepeatForever�͐��������A�j���[�V�������𖳌��ɌJ��Ԃ�
+	//cocos2d::RepeatForever型のポインタ変数animateを宣言　なんか闇っぽい
+	//Animate::create(animation)でanimationで宣言された2コマアニメを生成してるとおもう
+	//RepeatForeverは生成したアニメーションをを無限に繰り返す
 	auto animate = RepeatForever::create(Animate::create(animation));
 
-	//�|�C���^�ϐ�animate��ACTION_TAG�Ƃ����^�O��ݒ�
+	//ポインタ変数animateにACTION_TAGというタグを設定
 	animate->setTag(ACTION_TAG);
 
-	//animate�Ƃ����A�N�V�����𑖂点��
+	//animateというアクションを走らせる
 	this->runAction(animate);
 
-	//indexCheck��index�̒l��������
+	//indexCheckにindexの値を代入する
 	indexCheck = index;
 }
 

@@ -1,30 +1,30 @@
-//‚à‚µdefine‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î
+//ã‚‚ã—defineã•ã‚Œã¦ã„ãªã‘ã‚Œã°
 #ifndef __MyGame__MainScene__
-//ƒRƒ“ƒpƒCƒ‹‚É’u‚«Š·‚¦‚é@ƒCƒ“ƒNƒ‹[ƒhƒK[ƒh‚Æ‚¢‚¤‚ç‚µ‚¢B
-//ifndef‚Æendif‚ÌŠÔ‚É‹²‚Ş‚ÆƒGƒ‰[‚ªo‚È‚­‚È‚é‚¨‚Ü‚¶‚È‚¢B
+//ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ç½®ãæ›ãˆã‚‹ã€€ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã‚¬ãƒ¼ãƒ‰ã¨ã„ã†ã‚‰ã—ã„ã€‚
+//ifndefã¨endifã®é–“ã«æŒŸã‚€ã¨ã‚¨ãƒ©ãƒ¼ãŒå‡ºãªããªã‚‹ãŠã¾ã˜ãªã„ã€‚
 #define __MyGame___MainScene__
 
-//ƒwƒbƒ_[ƒtƒ@ƒCƒ‹“™‚ğ“Ç‚İ‚Ş
+//ãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ç­‰ã‚’èª­ã¿è¾¼ã‚€
 #include "cocos2d.h"
 #include "Stage.h"
 #include "Player.h"
 #include "SimpleAudioEngine.h"
 
 
-//LayerƒNƒ‰ƒX‚Ìpublic‚ÅŒp³ƒNƒ‰ƒXMainScene‚ÌéŒ¾@
+//Layerã‚¯ãƒ©ã‚¹ã®publicã§ç¶™æ‰¿ã‚¯ãƒ©ã‚¹MainSceneã®å®£è¨€ã€€
 class MainScene :public cocos2d::Layer
 {
-	//MainScene‚Ì’†‚Å‚Ì‚İ
+	//MainSceneã®ä¸­ã§ã®ã¿
 protected:
 
-	//MainScene‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÌéŒ¾ i–¼‘O‚ª“¯‚¶‚¾‚©‚ç‚í‚©‚è‚Ã‚ç‚¢‹C‚ª‚·‚é‚ª‚»‚¤‚¢‚¤‚à‚Ì‚ç‚µ‚¢
+	//MainSceneã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å®£è¨€ ï¼ˆåå‰ãŒåŒã˜ã ã‹ã‚‰ã‚ã‹ã‚Šã¥ã‚‰ã„æ°—ãŒã™ã‚‹ãŒãã†ã„ã†ã‚‚ã®ã‚‰ã—ã„
 	MainScene();
 	
-	//virtual‚Í‰¼‘zŠÖ”‚Æ‚¢‚¤‚¨‚Ü‚¶‚È‚¢@ƒfƒXƒgƒ‰ƒNƒ^‚ÌéŒ¾
+	//virtualã¯ä»®æƒ³é–¢æ•°ã¨ã„ã†ãŠã¾ã˜ãªã„ã€€ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å®£è¨€
 	virtual ~MainScene();
 	
-	//CREATE_FUNC‚ğg—p‚·‚é‚Ì‚É•K—v
-	//boolŒ^‚ÌinitŠÖ”‚ğéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	//CREATE_FUNCã‚’ä½¿ç”¨ã™ã‚‹ã®ã«å¿…è¦
+	//boolå‹ã®inité–¢æ•°ã‚’å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	bool init() override;
 
 	enum class GameState
@@ -34,52 +34,52 @@ protected:
 		RESULT
 	};
 
-	//“G—N‚«‚Ìƒ^ƒCƒ}[‚Æ‚»‚Ì’l‚Ì•Ï”
+	//æ•µæ¹§ãã®ã‚¿ã‚¤ãƒãƒ¼ã¨ãã®å€¤ã®å¤‰æ•°
 	int popTimer;
 	int popGuide;
-	//“G‚ğ“|‚µ‚½”‚Ì•Ï”
+	//æ•µã‚’å€’ã—ãŸæ•°ã®å¤‰æ•°
 	int enemyBusted;
 	
-	//ƒŒƒA“GoŒ»‚Ì—”—p
+	//ãƒ¬ã‚¢æ•µå‡ºç¾ã®ä¹±æ•°ç”¨
 	int enemy_pop;
 
-	//ƒNƒ‰ƒXŠO‚©‚ç‚Å‚àQÆ‚Å‚«‚é
+	//ã‚¯ãƒ©ã‚¹å¤–ã‹ã‚‰ã§ã‚‚å‚ç…§ã§ãã‚‹
 public:
 	
-	// Bullet‚ªŠi”[‚Å‚«‚éƒ|ƒCƒ“ƒ^”z—ñiHjA_bullets‚ğ’è‹`‚·‚é
+	// BulletãŒæ ¼ç´ã§ãã‚‹ãƒã‚¤ãƒ³ã‚¿é…åˆ—ï¼ˆï¼Ÿï¼‰ã€_bulletsã‚’å®šç¾©ã™ã‚‹
 	cocos2d::Vector<Bullet *> _bullets;
 
-	// Á‚·—\’è‚Ì’eƒŠƒXƒg‚ğì‚é
+	// æ¶ˆã™äºˆå®šã®å¼¾ãƒªã‚¹ãƒˆã‚’ä½œã‚‹
 	cocos2d::Vector<Bullet *> deletedBullets;
 
-	// Enemy‚ªŠi”[‚Å‚«‚éƒ|ƒCƒ“ƒ^”z—ñiHjA_enemys‚ğ’è‹`‚·‚é
+	// EnemyãŒæ ¼ç´ã§ãã‚‹ãƒã‚¤ãƒ³ã‚¿é…åˆ—ï¼ˆï¼Ÿï¼‰ã€_enemysã‚’å®šç¾©ã™ã‚‹
 	cocos2d::Vector<Enemy *> _zako;
 
 
-	// Enemy‚ªŠi”[‚Å‚«‚éƒ|ƒCƒ“ƒ^”z—ñiHjA_enemys‚ğ’è‹`‚·‚é
+	// EnemyãŒæ ¼ç´ã§ãã‚‹ãƒã‚¤ãƒ³ã‚¿é…åˆ—ï¼ˆï¼Ÿï¼‰ã€_enemysã‚’å®šç¾©ã™ã‚‹
 	cocos2d::Vector<Enemy *> _rare;
 
 
-	// Á‚·—\’è‚Ì“GƒŠƒXƒg‚ğì‚é
+	// æ¶ˆã™äºˆå®šã®æ•µãƒªã‚¹ãƒˆã‚’ä½œã‚‹
 	cocos2d::Vector<Enemy *> deletedEnemys;
 
-	// ƒNƒ‰ƒXŠÖ”‚Å‚ ‚écocos2d::SceneŒ^‚Ì*createScene‚Æ‚¢‚¤ŠÖ”‚ÌéŒ¾
+	// ã‚¯ãƒ©ã‚¹é–¢æ•°ã§ã‚ã‚‹cocos2d::Sceneå‹ã®*createSceneã¨ã„ã†é–¢æ•°ã®å®£è¨€
 	static cocos2d::Scene* createScene();
 
-	//cocos2d::Vec2‚Æ‚¢‚¤Œ^‚Å_velocity‚Æ‚¢‚¤ƒƒ“ƒo•Ï”‚ğ’è‹`‚µ‚Ä‚¢‚é
-	//‚±‚Ì•Ï”‚ÍƒLƒƒƒ‰ƒNƒ^[‚Ì‘¬“x‚ğ•\‚µA–ˆƒtƒŒ[ƒ€‚±‚Ì‘¬“x‚ğŒ»İÀ•W‚É‰Á‚¦‚é‚±‚Æ‚ÅˆÚ“®‚µ‚Ä‚¢‚é
-	cocos2d::Vec2 _velocity; // ˆÚ“®—Ê
+	//cocos2d::Vec2ã¨ã„ã†å‹ã§_velocityã¨ã„ã†ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚’å®šç¾©ã—ã¦ã„ã‚‹
+	//ã“ã®å¤‰æ•°ã¯ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®é€Ÿåº¦ã‚’è¡¨ã—ã€æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ã“ã®é€Ÿåº¦ã‚’ç¾åœ¨åº§æ¨™ã«åŠ ãˆã‚‹ã“ã¨ã§ç§»å‹•ã—ã¦ã„ã‚‹
+	cocos2d::Vec2 _velocity; // ç§»å‹•é‡
 
-	// voidŒ^‚Ìupdate(float dt)‚Æ‚¢‚¤ŠÖ”‚ÌéŒ¾@override‚Í‚¨‚Ü‚¶‚È‚¢B
+	// voidå‹ã®update(float dt)ã¨ã„ã†é–¢æ•°ã®å®£è¨€ã€€overrideã¯ãŠã¾ã˜ãªã„ã€‚
 	void update(float dt) override;
-	//@voidŒ^‚Ì’·‚¢–¼‘O‚ÌŠÖ”‚ÌéŒ¾
+	//ã€€voidå‹ã®é•·ã„åå‰ã®é–¢æ•°ã®å®£è¨€
 	void onEnterTransitionDidFinish() override;
 
-	//ƒŠƒUƒ‹ƒg‚Ìˆ—
+	//ãƒªã‚¶ãƒ«ãƒˆã®å‡¦ç†
 	void onResult();
 
-	//stage‚ğ—á‚É‚·‚é‚ÆAStage*‚Æ‚¢‚¤Œ^‚ğ‚Â‚­‚èAMainSceneƒNƒ‰ƒX‚Ìprivate•Ï”_stage‚ğì‚èAgetStage/setStage‚ğ‚Â‚­‚é
-	//getStage‚Í_stage‚ğæ“¾‚µAsetStage‚Í_stage‚ğ‘‚«Š·‚¦‚ç‚ê‚é
+	//stageã‚’ä¾‹ã«ã™ã‚‹ã¨ã€Stage*ã¨ã„ã†å‹ã‚’ã¤ãã‚Šã€MainSceneã‚¯ãƒ©ã‚¹ã®privateå¤‰æ•°_stageã‚’ä½œã‚Šã€getStage/setStageã‚’ã¤ãã‚‹
+	//getStageã¯_stageã‚’å–å¾—ã—ã€setStageã¯_stageã‚’æ›¸ãæ›ãˆã‚‰ã‚Œã‚‹
 	CC_SYNTHESIZE_RETAIN(Stage* , _stage, Stage);
 	CC_SYNTHESIZE_RETAIN(Player*, _player, Player);
 
@@ -92,11 +92,11 @@ public:
 	CC_SYNTHESIZE(GameState, _state, State);
 
 
-	//auto mainScene = MainScene::create(); ‚Æ“¯‚¶ˆÓ–¡Bbool init();‚ª•K—v
-	//ã‹L‚ÍMainSceneŒ^‚Ì*mainScene‚Æ‚¢‚¤ƒ|ƒCƒ“ƒ^•Ï”‚ÉMainScene::create()‚ğ‘ã“ü‚µ‚Ä‚¢‚é
+	//auto mainScene = MainScene::create(); ã¨åŒã˜æ„å‘³ã€‚bool init();ãŒå¿…è¦
+	//ä¸Šè¨˜ã¯MainSceneå‹ã®*mainSceneã¨ã„ã†ãƒã‚¤ãƒ³ã‚¿å¤‰æ•°ã«MainScene::create()ã‚’ä»£å…¥ã—ã¦ã„ã‚‹
 	CREATE_FUNC(MainScene);
 
 
 };
-//ifndef‚©‚ç‚±‚±‚Ü‚Å‚ğƒRƒ“ƒpƒCƒ‹‚·‚é@‚ç‚µ‚¢
+//ifndefã‹ã‚‰ã“ã“ã¾ã§ã‚’ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã™ã‚‹ã€€ã‚‰ã—ã„
 #endif /*defined(__MyGame___MainScene__)*/

@@ -1,6 +1,6 @@
 #include "Enemy.h"
 
-//–¼‘O‹óŠÔcocos2d‚ğ‚µ‚æ‚¤‚·‚é‚Æ‚¢‚¤éŒ¾
+//åå‰ç©ºé–“cocos2dã‚’ã—ã‚ˆã†ã™ã‚‹ã¨ã„ã†å®£è¨€
 USING_NS_CC;
 
 const int EFRAME_COUNT = 2;
@@ -16,14 +16,14 @@ bool ZakoEnemy::init()
 {
 	if (!Sprite::initWithFile("enemy.png"))
 	{
-		//•Ô‚è’l‚Éfalse‚ğ•Ô‚·
+		//è¿”ã‚Šå€¤ã«falseã‚’è¿”ã™
 		return false;
 	}
-	// cocos2d::SizeŒ^‚ÌZakoframeSize•Ï”‚Å•\¦‚·‚é’e‚ÌƒXƒvƒ‰ƒCƒg‚ÌƒTƒCƒY‚ğw’èH
-	//Ú×‚Íã•”frameSize‚É‚Ä
+	// cocos2d::Sizeå‹ã®ZakoframeSizeå¤‰æ•°ã§è¡¨ç¤ºã™ã‚‹å¼¾ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚µã‚¤ã‚ºã‚’æŒ‡å®šï¼Ÿ
+	//è©³ç´°ã¯ä¸Šéƒ¨frameSizeã«ã¦
 	auto ZakoframeSize = Size(32.0, 32.0);
 
-	//playAnimation(int index)‚ÆƒAƒjƒ[ƒVƒ‡ƒ“‚ÌØ‚è‘Ö‚¦‚ª‚È‚¢ˆÈŠO‚Í“¯‚¶
+	//playAnimation(int index)ã¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆ‡ã‚Šæ›¿ãˆãŒãªã„ä»¥å¤–ã¯åŒã˜
 	this->setTextureRect(Rect(0, 0, ZakoframeSize.width, ZakoframeSize.height));
 	Vector<SpriteFrame*> Zakoframes;
 	for (int j = 0; j < EFRAME_COUNT; ++j)
@@ -46,12 +46,12 @@ bool RareEnemy::init()
 {
 	if ( !Sprite::initWithFile("boss.png"))
 	{
-		//•Ô‚è’l‚Éfalse‚ğ•Ô‚·
+		//è¿”ã‚Šå€¤ã«falseã‚’è¿”ã™
 		return false;
 	}
 	auto RareframeSize = Size(32.0, 32.0);
 
-	//playAnimation(int index)‚ÆƒAƒjƒ[ƒVƒ‡ƒ“‚ÌØ‚è‘Ö‚¦‚ª‚È‚¢ˆÈŠO‚Í“¯‚¶
+	//playAnimation(int index)ã¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆ‡ã‚Šæ›¿ãˆãŒãªã„ä»¥å¤–ã¯åŒã˜
 	this->setTextureRect(Rect(0, 0, RareframeSize.width, RareframeSize.height));
 	Vector<SpriteFrame*> Rareframes;
 	for (int bj = 0; bj < EFRAME_COUNT; ++bj)
@@ -71,15 +71,15 @@ bool RareEnemy::init()
 }
 
 bool Enemy::init(){
-	//‚à‚µbullet.png‚İ‚Â‚©‚ç‚È‚©‚Á‚½‚ç
+	//ã‚‚ã—bullet.pngã¿ã¤ã‹ã‚‰ãªã‹ã£ãŸã‚‰
 	if (!Sprite::initWithFile("enemy.png"))
 	{
-		//•Ô‚è’l‚Éfalse‚ğ•Ô‚·
+		//è¿”ã‚Šå€¤ã«falseã‚’è¿”ã™
 		return false;
 	}
 
-	//–ˆƒtƒŒ[ƒ€XV
+	//æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°
 	this->scheduleUpdate();
-	//•Ô‚è’l‚Étrue‚ğ•Ô‚·
+	//è¿”ã‚Šå€¤ã«trueã‚’è¿”ã™
 	return true;
 }
