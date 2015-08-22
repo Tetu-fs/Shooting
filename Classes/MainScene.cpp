@@ -16,7 +16,7 @@ MainScene::MainScene()
 	, _state(GameState::PLAYING)
 {
 	popTimer = 0;
-	popGuide = 90;
+	popGuide = 75;
 	enemyBusted = 0;
 }
 
@@ -120,7 +120,7 @@ void MainScene::update(float dt) {
 			deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
 			this->removeChild(bullet);
 		}
-	}	
+	}
 
 	for (Enemy * zako : _zako) { // for-loopでzakoを1つずつ見ていく
 		Vec2 zakoPosition = zako->getPosition();
@@ -151,13 +151,15 @@ void MainScene::update(float dt) {
 	for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
 		for (Enemy * zako : _zako) { // for-loopでbulletを1つずつ見ていく
 
-			Vec2 bulletHit = bullet->getPosition();
+			Vec2 bulletZakoHit = bullet->getPosition();
 			Rect zakoBoundingBox = zako->getBoundingBox();
-			bool zakoHit = zakoBoundingBox.containsPoint(bulletHit);
-			if (zakoHit) {  // もしも当たったら
+			bool zakoHit = zakoBoundingBox.containsPoint(bulletZakoHit);
+			if (zakoHit&& zako->getParent()) {  // もしも当たったら
 				deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
 				this->removeChild(bullet);
-				deletedEnemys.pushBack(zako);
+				if (!deletedEnemys.contains(zako)){
+					deletedEnemys.pushBack(zako);
+				}
 				this->removeChild(zako);
 				enemyBusted++;
 
@@ -179,16 +181,20 @@ void MainScene::update(float dt) {
 		for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
 			for (Enemy * rare : _rare) { // for-loopでbulletを1つずつ見ていく
 
-				Vec2 bulletHit = bullet->getPosition();
+				Vec2 bulletRareHit = bullet->getPosition();
 				Rect rareBoundingBox = rare->getBoundingBox();
-				bool rareHit = rareBoundingBox.containsPoint(bulletHit);
-				if (rareHit) {  // もしも当たったら
+				bool rareHit = rareBoundingBox.containsPoint(bulletRareHit);
+				if (rareHit && rare->getParent()) {  // もしも当たったら
 					deletedBullets.pushBack(bullet); // 消す予定リストに弾を追加
 					this->removeChild(bullet);
-					deletedEnemys.pushBack(rare);
+					if (!deletedEnemys.contains(rare)){
+						deletedEnemys.pushBack(rare);
+					}
 					this->removeChild(rare);
+					//log("checkSize %d", deletedEnemys.size());
 					_score += 500;
-					_score *= 2;
+					_score *= 5;
+					//log("checkSize %d", deletedEnemys.size());
 					enemyBusted++;
 					if (enemyBusted >= 10 && popGuide > 5){
 						popGuide -= 5;
@@ -215,13 +221,14 @@ void MainScene::update(float dt) {
 
 	//消す敵リストに突っ込む
 	for (Enemy * enemy : deletedEnemys) {
-	
+
 		_zako.eraseObject(enemy);
 		_rare.eraseObject(enemy);
 
 	}
 
 	deletedEnemys.clear();
+
 
 }
 
@@ -335,9 +342,12 @@ bool MainScene::init()
 			if (_state == GameState::PLAYING){
 				//もし押されたキーがスペースキーだったら
 				if (keyCode == EventKeyboard::KeyCode::KEY_SPACE) {
-					Bullet *bullet = _player->shoot();
-					this->addChild(bullet);
-					_bullets.pushBack(bullet);
+
+						Bullet *bullet = _player->shoot();
+						this->addChild(bullet);
+						_bullets.pushBack(bullet);
+
+
 				}
 
 
