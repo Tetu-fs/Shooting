@@ -1,4 +1,4 @@
-#include "bullet.h"
+#include "Bullet.h"
 //名前空間cocos2dをしようするという宣言
 USING_NS_CC;
 

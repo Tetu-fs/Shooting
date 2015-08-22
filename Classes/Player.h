@@ -1,6 +1,6 @@
 // cocos2d.hを読む
 #include "cocos2d.h"
-#include "bullet.h"
+#include "Bullet.h"
 
 //Spriteを継承したPlayerクラスを作る
 class Player : public cocos2d::Sprite
