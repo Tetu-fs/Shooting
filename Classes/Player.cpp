@@ -31,7 +31,7 @@ bool Player::init()
 {
 	int bulletCount = 0;
 	//もしkawaz_shoothing.pngが見つからなかったら
-	if (!Sprite::initWithFile("kawaz_shooting.png"))
+	if (!Sprite::initWithFile("graphic/kawaz_shooting.png"))
 	{
 		//返り値にfalseを返す
 		return false;
@@ -50,7 +50,7 @@ Bullet * Player::shoot()
 	//bulletに取得したテクスチャを与える
 	bullet->getTexture()->setAliasTexParameters();
 	//効果音をならす
-	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("shot_se.wav");
+	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/shot_se.wav");
 	//戻り値にbulletを返す
 	return bullet;
 }
@@ -93,7 +93,7 @@ void Player::playAnimation(int index) {
 		//画像kawaz_shooting.pngを読み、frameSize.widthにiをかけ2コマアニメーションのループ
 		//indexに16(frameSize.heightの値)をかけ、アニメーションを切り替え
 		//frameSize.widthとframeSize.heightで表示する画像の大きさを指定？
-		auto frame = SpriteFrame::create("kawaz_shooting.png", Rect(frameSize.width * i, index * 16, frameSize.width, frameSize.height));
+		auto frame = SpriteFrame::create("graphic/kawaz_shooting.png", Rect(frameSize.width * i, index * 16, frameSize.width, frameSize.height));
 
 		//配列framesの終わりにframeの値を挿入する
 		frames.pushBack(frame);

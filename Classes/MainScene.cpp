@@ -90,7 +90,7 @@ void MainScene::update(float dt) {
 		if (popTimer >= popGuide){
 			enemy_pop = RandomHelper::random_int<int>(1, 100);
 
-			if (enemy_pop > 5)
+			if (enemy_pop > 2)
 			{
 				Enemy *zako = _stage->popZako();
 				this->addChild(zako);
@@ -112,6 +112,12 @@ void MainScene::update(float dt) {
 		}
 
 	}
+
+	//アホみたいに重い
+	_stage->drawGround(-32 + _player->getPositionY() / 8);
+
+
+
 	//消滅stop
 	for (Bullet * bullet : _bullets) { // for-loopでbulletを1つずつ見ていく
 		Vec2 bulletPosition = bullet->getPosition();
@@ -130,7 +136,7 @@ void MainScene::update(float dt) {
 			this->removeChild(zako);
 			_life--;
 			_lifeLabel->setString(StringUtils::toString(_life));
-			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("damage_se.wav");
+			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/damage_se.wav");
 
 		}
 	}
@@ -143,7 +149,7 @@ void MainScene::update(float dt) {
 			this->removeChild(rare);
 			_life--;
 			_lifeLabel->setString(StringUtils::toString(_life));
-			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("damage_se.wav");
+			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/damage_se.wav");
 
 		}
 	}
@@ -166,14 +172,14 @@ void MainScene::update(float dt) {
 				_score += 100;
 				if (enemyBusted >= 10 && popGuide > 5){
 					popGuide -= 5;
-					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/level_se.wav");
 
 					enemyBusted = 0;
 				}
 
 
 				_scoreLabel->setString(StringUtils::toString(_score));
-				CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("hit_se.wav");
+				CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/hit_se.wav");
 
 
 			}
@@ -198,14 +204,14 @@ void MainScene::update(float dt) {
 					enemyBusted++;
 					if (enemyBusted >= 10 && popGuide > 5){
 						popGuide -= 5;
-						CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
+						CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/level_se.wav");
 
 						enemyBusted = 0;
 					}
 
 
 					_scoreLabel->setString(StringUtils::toString(_score));
-					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("rare_se.wav");
+					CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/rare_se.wav");
 
 
 				}
@@ -235,7 +241,9 @@ void MainScene::update(float dt) {
 void MainScene::onEnterTransitionDidFinish()
 {
 	Layer::onEnterTransitionDidFinish();
-	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main_bgm.wav", true);
+	auto soundEngine = CocosDenshion::SimpleAudioEngine::getInstance();
+	soundEngine->preloadBackgroundMusic("sounds/main_bgm.wav");
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/main_bgm.wav", true);
 }
 
 void MainScene::onResult(){
@@ -246,20 +254,20 @@ void MainScene::onResult(){
 	this->addChild(_scoreLabel);
 
 	auto scoreHeader = Label::createWithSystemFont("Score", "arial", 32);
-	scoreHeader->setPosition(Vec2(320, 440));
+	scoreHeader->setPosition(Vec2(320, 460));
 	this->addChild(scoreHeader);
 
-	auto replay_normal = Sprite::create("replay.png");
-	auto replay_press = Sprite::create("replay_press.png");
-	auto title_normal = Sprite::create("title.png");
-	auto title_press = Sprite::create("title_press.png");
+	auto replay_normal = Sprite::create("graphic/replay.png");
+	auto replay_press = Sprite::create("graphic/replay_press.png");
+	auto title_normal = Sprite::create("graphic/title.png");
+	auto title_press = Sprite::create("graphic/title_press.png");
 
 	//リプレイボタンのstop
 	auto replayButton = MenuItemSprite::create(replay_normal, replay_press , [](Ref* ref)
 	{
 		auto scene = MainScene::createScene();
 		Director::getInstance()->replaceScene(scene);
-		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
+		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/level_se.wav");
 	});
 
 	//タイトルボタンのstop
@@ -268,7 +276,7 @@ void MainScene::onResult(){
 		auto scene = TitleScene::createScene();
 		auto transition = TransitionFade::create(1.0f, scene);
 		Director::getInstance()->replaceScene(transition);
-		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("rare_se.wav");
+		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/rare_se.wav");
 		CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 	});
 	replay_normal->getTexture()->setAliasTexParameters();
@@ -304,7 +312,8 @@ bool MainScene::init()
 
 
 	auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "arial", 16);
-	scoreLabel->setPosition(Vec2(580, 440));
+	scoreLabel->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
+	scoreLabel->setPosition(Vec2(620, 430));
 	this->setScoreLabel(scoreLabel);
 	this->addChild(_scoreLabel);
 
@@ -325,6 +334,8 @@ bool MainScene::init()
 	auto kawaztan = Player::create();
 	//kawaztanをX64,Y240の位置にセットする
 	kawaztan->setPosition(Vec2(64, 240));
+
+
 	//MainSceneの子にkawaztanを加える
 	this->addChild(kawaztan);
 	//MainSceneで_playerにkawaztanをセットする
@@ -333,7 +344,6 @@ bool MainScene::init()
 	kawaztan->getTexture()->setAliasTexParameters();
 	//kawaztanの表示サイズを2倍にする
 	kawaztan->setScale(2.0f);
-
 
 		//cocos2d::EventListenerKeyboard型のポインタ変数keyboardListenerを宣言し、EventListenerKeyboard::createを代入
 		auto keyboardListener = EventListenerKeyboard::create();

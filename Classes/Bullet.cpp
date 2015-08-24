@@ -17,7 +17,7 @@ void Bullet::update(float dt)
 //bool型のBullet::init()関数を宣言
 bool Bullet::init(){
 	//もしbullet.pngみつからなかったら
-	if (!Sprite::initWithFile("bullet.png"))
+	if (!Sprite::initWithFile("graphic/bullet.png"))
 	{
 		//返り値にfalseを返す
 		return false;
@@ -31,7 +31,7 @@ bool Bullet::init(){
 	Vector<SpriteFrame*> Bframes;
 	for (int j = 0; j < BFRAME_COUNT; ++j)
 	{
-		auto Bframe = SpriteFrame::create("bullet.png", Rect(BframeSize.width * j, 0, BframeSize.width, BframeSize.height));
+		auto Bframe = SpriteFrame::create("graphic/bullet.png", Rect(BframeSize.width * j, 0, BframeSize.width, BframeSize.height));
 		Bframes.pushBack(Bframe);
 	}
 

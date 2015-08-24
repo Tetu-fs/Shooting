@@ -26,6 +26,10 @@ protected:
 
 	//クラス外からでも参照可能
 public:
+
+
+	float drawGround(float groundY);
+
 	//void型のupdate(float dt)関数の宣言　overrideはおまじない
 	void update(float dt) override;
 
@@ -39,8 +43,6 @@ public:
 	//ここでつくられたTMXTiledMap型の変数はポインタ変数になる
 	//getTledMapは_tiledMapを取得し、setTledMapは_tiledMapを書き換えられる
 	CC_SYNTHESIZE_RETAIN(cocos2d::TMXTiledMap *, _tiledMap, TiledMap);
-	CC_SYNTHESIZE_RETAIN(cocos2d::ParallaxNode *, _pallaraxNode, PallaraxNode);
-
 	//static Stage* create()と同じ意味。bool init();が必要
 	//Stageクラスインスタンスへのポインタを返すStageクラスのクラスメソッド、createを宣言している
 	CREATE_FUNC(Stage);

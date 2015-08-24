@@ -28,7 +28,7 @@ TitleScene::~TitleScene()
 void TitleScene::onEnterTransitionDidFinish()
 {
 	Layer::onEnterTransitionDidFinish();
-	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("title_jingle.mp3", false);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/title_jingle.mp3", false);
 }
 
 bool TitleScene::init()
@@ -39,7 +39,7 @@ bool TitleScene::init()
 	}
 
 
-	auto logo = Sprite::create("title_logo.png");
+	auto logo = Sprite::create("graphic/title_logo.png");
 	logo->setPosition(Vec2(320, 400));
 	logo->getTexture()->setAliasTexParameters();
 	logo->setScale(2.0f);
@@ -57,7 +57,7 @@ bool TitleScene::init()
 	ClickStart->setPosition(Vec2(320, 160));
 	this->addChild(ClickStart);
 	//ゲームスタートボタン処理
-	auto start = Sprite::create("start.png");
+	auto start = Sprite::create("graphic/start.png");
 	start->setPosition(Vec2(320, 80));
 	this->addChild(start);
 	auto listener = EventListenerTouchOneByOne::create();
@@ -65,7 +65,7 @@ bool TitleScene::init()
 		log("touch");
 		CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 
-		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("level_se.wav");
+		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/level_se.wav");
 		this->getEventDispatcher()->removeAllEventListeners();
 
 		auto delay = DelayTime::create(0.5);
@@ -77,7 +77,7 @@ bool TitleScene::init()
 		});
 		this->runAction(Sequence::create(delay, startGame, NULL));
 
-		auto start_press = Sprite::create("start_press.png");
+		auto start_press = Sprite::create("graphic/start_press.png");
 		start_press->setPosition(Vec2(320, 80));
 		this->addChild(start_press);
 

@@ -14,7 +14,7 @@ void Enemy::update(float dt)
 
 bool ZakoEnemy::init()
 {
-	if (!Sprite::initWithFile("enemy.png"))
+	if (!Sprite::initWithFile("graphic/enemy.png"))
 	{
 		//返り値にfalseを返す
 		return false;
@@ -28,7 +28,7 @@ bool ZakoEnemy::init()
 	Vector<SpriteFrame*> Zakoframes;
 	for (int j = 0; j < EFRAME_COUNT; ++j)
 	{
-		auto Zakoframe = SpriteFrame::create("enemy.png", Rect(ZakoframeSize.width * j, 0, ZakoframeSize.width, ZakoframeSize.height));
+		auto Zakoframe = SpriteFrame::create("graphic/enemy.png", Rect(ZakoframeSize.width * j, 0, ZakoframeSize.width, ZakoframeSize.height));
 		Zakoframes.pushBack(Zakoframe);
 	}
 
@@ -36,7 +36,7 @@ bool ZakoEnemy::init()
 	Zakoanimation->setDelayPerUnit(0.1);
 	auto Zakoanimate = RepeatForever::create(Animate::create(Zakoanimation));
 	this->runAction(Zakoanimate);
-	auto enemyMove = MoveTo::create(4, Vec2(-600, 0));
+	auto enemyMove = MoveTo::create(4, Vec2(-640, 0));
 	this->runAction(enemyMove);
 
 	return true;
@@ -44,7 +44,7 @@ bool ZakoEnemy::init()
 
 bool RareEnemy::init()
 {
-	if ( !Sprite::initWithFile("boss.png"))
+	if ( !Sprite::initWithFile("graphic/boss.png"))
 	{
 		//返り値にfalseを返す
 		return false;
@@ -56,7 +56,7 @@ bool RareEnemy::init()
 	Vector<SpriteFrame*> Rareframes;
 	for (int bj = 0; bj < EFRAME_COUNT; ++bj)
 	{
-		auto Rareframe = SpriteFrame::create("boss.png", Rect(RareframeSize.width * bj, 0, RareframeSize.width, RareframeSize.height));
+		auto Rareframe = SpriteFrame::create("graphic/boss.png", Rect(RareframeSize.width * bj, 0, RareframeSize.width, RareframeSize.height));
 		Rareframes.pushBack(Rareframe);
 	}
 
@@ -64,7 +64,7 @@ bool RareEnemy::init()
 	Rareanimation->setDelayPerUnit(0.1);
 	auto Rareanimate = RepeatForever::create(Animate::create(Rareanimation));
 	this->runAction(Rareanimate);
-	auto RareMove = MoveTo::create(2, Vec2(-600, 0));
+	auto RareMove = MoveTo::create(2, Vec2(-640, 0));
 	this->runAction(RareMove);
 
 	return true;
@@ -72,7 +72,7 @@ bool RareEnemy::init()
 
 bool Enemy::init(){
 	//もしbullet.pngみつからなかったら
-	if (!Sprite::initWithFile("enemy.png"))
+	if (!Sprite::initWithFile("graphic/enemy.png"))
 	{
 		//返り値にfalseを返す
 		return false;

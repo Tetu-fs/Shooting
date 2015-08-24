@@ -43,6 +43,7 @@ protected:
 	//レア敵出現の乱数用
 	int enemy_pop;
 
+
 	//クラス外からでも参照できる
 public:
 	
@@ -83,7 +84,7 @@ public:
 	CC_SYNTHESIZE_RETAIN(Stage* , _stage, Stage);
 	CC_SYNTHESIZE_RETAIN(Player*, _player, Player);
 
-	CC_SYNTHESIZE(long, _score, Score);
+	CC_SYNTHESIZE(unsigned long long, _score, Score);
 	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _scoreLabel, ScoreLabel);
 	
 	CC_SYNTHESIZE(int, _life, Life);
