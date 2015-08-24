@@ -114,7 +114,7 @@ bool Stage::init()
 
 	//TMXTiledMapのポインタ変数mapにTMXTiledMap::create("test_map.tmx")を代入
 	//test_map.tmxを読む
-	auto ground = TMXTiledMap::create("ground.tmx");
+	auto ground = TMXTiledMap::create("graphic/ground.tmx");
 	//TMXTiledMapのポインタ変数backgroundにmapのレイヤーbackgroundを代入
 	// Tiledで設定したレイヤーの名前を渡す
 	TMXLayer* yuka = ground->getLayer("yuka");
@@ -124,7 +124,7 @@ bool Stage::init()
 	// Tiledで設定したレイヤーの名前を渡す
 	//TMXTiledMapのポインタ変数mapにTMXTiledMap::create("test_map.tmx")を代入
 	//test_map.tmxを読む
-	auto ground2 = TMXTiledMap::create("ground.tmx");
+	auto ground2 = TMXTiledMap::create("graphic/ground.tmx");
 	TMXLayer* yuka2 = ground2->getLayer("yuka");
 	//auto scrollGround = TMXTiledMap::create("test_map.tmx");
 	//TMXTiledMapのポインタ変数yukaにmapのレイヤーyukaを代入
