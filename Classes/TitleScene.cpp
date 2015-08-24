@@ -28,7 +28,7 @@ TitleScene::~TitleScene()
 void TitleScene::onEnterTransitionDidFinish()
 {
 	Layer::onEnterTransitionDidFinish();
-	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("title_loop.wav", true);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("title_jingle.mp3", false);
 }
 
 bool TitleScene::init()

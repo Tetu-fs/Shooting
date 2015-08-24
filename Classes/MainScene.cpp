@@ -235,7 +235,7 @@ void MainScene::update(float dt) {
 void MainScene::onEnterTransitionDidFinish()
 {
 	Layer::onEnterTransitionDidFinish();
-	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("shooting_loop.wav", true);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main_bgm.wav", true);
 }
 
 void MainScene::onResult(){
@@ -301,6 +301,7 @@ bool MainScene::init()
 	this->addChild(stage);
 	//MainSceneで_stageにstageをセットする
 	this->setStage(stage);
+
 
 	auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "arial", 16);
 	scoreLabel->setPosition(Vec2(580, 440));

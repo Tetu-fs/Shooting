@@ -8,12 +8,15 @@ USING_NS_CC;
 //_tiledMap(nullptr)「Stageクラスのpirvate変数_tiledMapに無を代入する」の意
 Stage::Stage()
 	: _tiledMap(nullptr)
+	, _pallaraxNode(nullptr)
 {
 }
 //Stageクラスのデストラクタ
 Stage::~Stage()
 {
 	CC_SAFE_RELEASE_NULL(_tiledMap);
+	CC_SAFE_RELEASE_NULL(_pallaraxNode);
+
 }
 //bool型のStage::init()関数を宣言
 
@@ -62,32 +65,45 @@ bool Stage::init()
 	{
 		return false;
 	}
-	//TMXTiledMapのポインタ変数mapにTMXTiledMap::create("test_map.tmx")を代入
-	//test_map.tmxを読む
-	auto map = TMXTiledMap::create("test_map.tmx");
-	//TMXTiledMapのポインタ変数backgroundにmapのレイヤーbackgroundを代入
-	// Tiledで設定したレイヤーの名前を渡す
-	TMXLayer* background = map->getLayer("background");
-	//TMXTiledMapのポインタ変数yukaにmapのレイヤーyukaを代入
-	TMXLayer* yuka = map->getLayer("yuka");
+
+	auto skySprite = Sprite::create("sky.png");
+	skySprite->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	skySprite->setPosition(0, 0);
+
+	auto setCloud = Node::create();
+	auto setGround = Node::create();
+
+	auto cloudSprite1 = Sprite::create("cloud.png");
+	auto cloudSprite2 = Sprite::create("cloud.png");
+	cloudSprite1->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	cloudSprite2->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	cloudSprite1->setPosition(0, 0);
+	cloudSprite2->setPosition(640, 0);
+
+	setCloud->addChild(cloudSprite1);
+	setCloud->addChild(cloudSprite2);
+
+
+	auto groundSprite1 = Sprite::create("ground.png");
+	auto groundSprite2 = Sprite::create("ground.png");
+	groundSprite1->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	groundSprite2->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	groundSprite1->setPosition(0, 0);
+	groundSprite2->setPosition(640, 0);
+
+	setGround->addChild(groundSprite1);
+	setGround->addChild(groundSprite2);
 	
-	//なんとなくはわかるけどよくわからない
-	//ここでTiledで設定した値からマップチップを並べている？
-	background->getTileAt(Vec2(x, y));
-	background->getTileGIDAt(Vec2(x, y));
-	yuka->getTileAt(Vec2(x, y));
-	yuka->getTileGIDAt(Vec2(x, y));
+
+	this->addChild(skySprite);
+	this->addChild(setCloud);
+	this->addChild(setGround);
 
 
-	//Stageクラスの表示場所を指定
-	this->setPosition(320, 240);
-	//Stageクラスのサイズを倍に指定
-	this->setScale(2.0f);
-	//Stageクラスの子にmapを加える（これで画像を描画だっけ）
-	this->addChild(map);
-	//StageクラスのTiledMapにmapを指定　おまじないかな
-	this->setTiledMap(map);
-
+	auto cloudMove = RepeatForever::create(Sequence::create(MoveTo::create(4, Vec2(-640, 0)), Place::create(Vec2::ZERO), NULL));
+	setCloud->runAction(cloudMove);
+	auto groundMove = RepeatForever::create(Sequence::create(MoveTo::create(2, Vec2(-640, 0)), Place::create(Vec2::ZERO), NULL));
+	setGround->runAction(groundMove);
 	//Stageクラスを毎フレーム更新する
 	this->scheduleUpdate();
 
