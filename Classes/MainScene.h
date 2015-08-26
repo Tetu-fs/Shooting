@@ -71,6 +71,10 @@ public:
 	//この変数はキャラクターの速度を表し、毎フレームこの速度を現在座標に加えることで移動している
 	cocos2d::Vec2 _velocity; // 移動量
 
+
+	cocos2d::Vec2 _cloudFollowVelocity; // 移動量
+	cocos2d::Vec2 _groundFollowVelocity; // 移動量
+
 	// void型のupdate(float dt)という関数の宣言　overrideはおまじない。
 	void update(float dt) override;
 	//　void型の長い名前の関数の宣言
@@ -79,9 +83,14 @@ public:
 	//リザルトの処理
 	void onResult();
 
+	Enemy* explosion();
+
 	//stageを例にすると、Stage*という型をつくり、MainSceneクラスのprivate変数_stageを作り、getStage/setStageをつくる
 	//getStageは_stageを取得し、setStageは_stageを書き換えられる
 	CC_SYNTHESIZE_RETAIN(Stage* , _stage, Stage);
+	CC_SYNTHESIZE_RETAIN(Ground*, _ground, Ground);
+	CC_SYNTHESIZE_RETAIN(Cloud*, _cloud, Cloud);
+
 	CC_SYNTHESIZE_RETAIN(Player*, _player, Player);
 
 	CC_SYNTHESIZE(unsigned long long, _score, Score);

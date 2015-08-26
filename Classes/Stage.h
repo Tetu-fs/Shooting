@@ -13,10 +13,6 @@ class Stage :public cocos2d::Layer
 {
 	//Stageクラス内でのみ
 protected:
-	//Stageコンストラクタの宣言
-	Stage();
-	//Stageデストラクタの宣言　virtualはおまじない
-	virtual ~Stage();
 
 	//bool型のinit()関数の宣言 overrideはおまじない
 	//CREATE_FUNC()に必須
@@ -27,16 +23,50 @@ protected:
 	//クラス外からでも参照可能
 public:
 
-
-	float drawGround(float groundY);
-
-	//void型のupdate(float dt)関数の宣言　overrideはおまじない
-	void update(float dt) override;
-
 	//Eenmy型StageクラスのpopZakoメソッドを宣言
 	Enemy* popZako();
 	//Eenmy型StageクラスのpopRareメソッドを宣言
 	Enemy* popRare();
+
+	//static Stage* create()と同じ意味。bool init();が必要
+	//Stageクラスインスタンスへのポインタを返すStageクラスのクラスメソッド、createを宣言している
+	CREATE_FUNC(Stage);
+};
+class Cloud :public Stage
+{
+	//Stageクラス内でのみ
+protected:
+
+	//bool型のinit()関数の宣言 overrideはおまじない
+	//CREATE_FUNC()に必須
+	bool init() override;
+
+
+
+	//クラス外からでも参照可能
+public:
+	//static Stage* create()と同じ意味。bool init();が必要
+	//Stageクラスインスタンスへのポインタを返すStageクラスのクラスメソッド、createを宣言している
+	CREATE_FUNC(Cloud);
+};
+
+class Ground :public Stage
+{
+	//Stageクラス内でのみ
+protected:
+	//Stageコンストラクタの宣言
+	Ground();
+	//Stageデストラクタの宣言　virtualはおまじない
+	virtual ~Ground();
+
+	//bool型のinit()関数の宣言 overrideはおまじない
+	//CREATE_FUNC()に必須
+	bool init() override;
+
+
+
+	//クラス外からでも参照可能
+public:
 
 	//Tile
 	//TMXTiledMapという型をつくり、Stageクラスのprivate変数_tiledMapを作り、getTledMap/setTledMapをつくる
@@ -45,7 +75,8 @@ public:
 	CC_SYNTHESIZE_RETAIN(cocos2d::TMXTiledMap *, _tiledMap, TiledMap);
 	//static Stage* create()と同じ意味。bool init();が必要
 	//Stageクラスインスタンスへのポインタを返すStageクラスのクラスメソッド、createを宣言している
-	CREATE_FUNC(Stage);
+	CREATE_FUNC(Ground);
 };
+
 
 #endif /*defined(__MyGame__stage__)*/

@@ -6,12 +6,12 @@ USING_NS_CC;
 
 //Stageクラスのコンストラクタ
 //_tiledMap(nullptr)「Stageクラスのpirvate変数_tiledMapに無を代入する」の意
-Stage::Stage()
+Ground::Ground()
 	: _tiledMap(nullptr)
 {
 }
 //Stageクラスのデストラクタ
-Stage::~Stage()
+Ground::~Ground()
 {
 	CC_SAFE_RELEASE_NULL(_tiledMap);
 
@@ -24,7 +24,7 @@ Enemy* Stage::popZako()
 	//Enemyクラスのポインタ変数enemyを作る
 	Enemy *zakoenemy = ZakoEnemy::create();
 	//enemyをX540,Y240の位置にセットする
-	zakoenemy->setPosition(Vec2(540, zakoY));
+	zakoenemy->setPosition(Vec2(600, zakoY));
 	//取得したenemyのテクスチャに対して設定を与えている
 	zakoenemy->getTexture()->setAliasTexParameters();
 	//enemyの表示サイズを2倍にする
@@ -40,7 +40,7 @@ Enemy* Stage::popRare()
 	//Enemyクラスのポインタ変数enemyを作る
 	Enemy *rareenemy = RareEnemy::create();
 	//enemyをX540,Y240の位置にセットする
-	rareenemy->setPosition(Vec2(540, rareY));
+	rareenemy->setPosition(Vec2(600, rareY));
 	//取得したenemyのテクスチャに対して設定を与えている
 	rareenemy->getTexture()->setAliasTexParameters();
 	//enemyの表示サイズを2倍にする
@@ -69,37 +69,7 @@ bool Stage::init()
 	skySprite->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 	skySprite->setPosition(0, 0);
 
-	auto setCloud = Node::create();
-
-	auto cloudSprite1 = Sprite::create("graphic/cloud.png");
-	auto cloudSprite2 = Sprite::create("graphic/cloud.png");
-	cloudSprite1->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-	cloudSprite2->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-	cloudSprite1->setPosition(0, 0);
-	cloudSprite2->setPosition(640, 0);
-
-	setCloud->addChild(cloudSprite1);
-	setCloud->addChild(cloudSprite2);
-
-	
-
-
 	this->addChild(skySprite);
-	this->addChild(setCloud);
-
-
-	//どうすっぺ
-	//
-
-	auto cloudMove = RepeatForever::create(
-		Sequence::create(
-		MoveTo::create(5, Vec2(-640, 0)),
-		Place::create(Vec2::ZERO),
-		NULL));
-	setCloud->runAction(cloudMove);
-
-
-
 	//Stageクラスを毎フレーム更新する
 	this->scheduleUpdate();
 
@@ -108,10 +78,45 @@ bool Stage::init()
 
 }
 
+bool Cloud::init()
+{
+	//もしLayerが初期化されていなかったら返り値にfalseを返す
+	if (!Layer::init())
+	{
+		return false;
+	}
+	auto setCloud = Node::create();
 
- float Stage::drawGround(float groundY)
+	auto cloudSprite1 = Sprite::create("graphic/cloud.png");
+	auto cloudSprite2 = Sprite::create("graphic/cloud.png");
+
+	cloudSprite1->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	cloudSprite2->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	cloudSprite1->setPosition(0, 16);
+	cloudSprite2->setPosition(640, 16);
+
+	setCloud->addChild(cloudSprite1);
+	setCloud->addChild(cloudSprite2);
+
+	auto cloudMove = RepeatForever::create(
+		Sequence::create(
+		MoveTo::create(5, Vec2(-640, 0)),
+		Place::create(Vec2::ZERO),
+		NULL));
+	setCloud->runAction(cloudMove);
+
+	this->addChild(setCloud);
+
+	return true;
+}
+
+bool Ground::init()
  {
-
+	 //もしLayerが初期化されていなかったら返り値にfalseを返す
+	 if (!Layer::init())
+	 {
+		 return false;
+	 }
 	//TMXTiledMapのポインタ変数mapにTMXTiledMap::create("test_map.tmx")を代入
 	//test_map.tmxを読む
 	auto ground = TMXTiledMap::create("graphic/ground.tmx");
@@ -141,8 +146,8 @@ bool Stage::init()
 
 	ground->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 	ground2->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-	ground->setPosition(0, groundY);
-	ground2->setPosition(640, groundY);
+	ground->setPosition(0, -32);
+	ground2->setPosition(640, -32);
 
 	auto setGround = Node::create();
 
@@ -155,14 +160,10 @@ bool Stage::init()
 		NULL));
 	setGround->runAction(groundMove);
 
-	//アカン
-	//this->addChild(setGround);
-	
-	return groundY;
+
+	this->addChild(setGround);
+
+	return true;
 }
 
-//毎フレーム更新する
-void Stage::update(float dt)
-{
 
-}

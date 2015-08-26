@@ -10,6 +10,8 @@ MainScene::MainScene()
 	: _score(0)
 	, _life(5)
 	,  _stage(nullptr)
+	, _ground(nullptr)
+	, _cloud(nullptr)
 	, _player(nullptr)
 	, _scoreLabel(nullptr)
 	, _lifeLabel(nullptr)
@@ -26,6 +28,8 @@ MainScene::~MainScene()
 	//メモリ解放。ヘッダーでCC_SYNTHESIZE_RETAINしたらこれをかかないといけない。
 	//MainSceneクラスのpirvate変数_stageにの中身を削除してメモリを開放している。
 	CC_SAFE_RELEASE_NULL(_stage);
+	CC_SAFE_RELEASE_NULL(_ground);
+	CC_SAFE_RELEASE_NULL(_cloud);
 	CC_SAFE_RELEASE_NULL(_player);
 	CC_SAFE_RELEASE_NULL(_scoreLabel);
 	CC_SAFE_RELEASE_NULL(_lifeLabel);
@@ -57,30 +61,66 @@ void MainScene::update(float dt) {
 	//自身の位置を、現在地＋ベクトル＊SPEEDの値にする
 	_player->setPosition(_player->getPosition() + _velocity * SPEED);
 
+	//Vec2型の_velocityという変数を整数値に直す？
+	_groundFollowVelocity.normalize();
+	//FSPEEDという定数
+	const float FSPEED = 0.15;
+	//自身の位置を、現在地＋ベクトル＊SPEEDの値にする
+	_ground->setPosition(_ground->getPosition() + _groundFollowVelocity * FSPEED);
+
+	//Vec2型の_velocityという変数を整数値に直す？
+	_cloudFollowVelocity.normalize();
+	//FSPEEDという定数
+	const float SSPEED = 0.05;
+	//自身の位置を、現在地＋ベクトル＊SPEEDの値にする
+	_cloud->setPosition(_cloud->getPosition() + _cloudFollowVelocity * SSPEED);
+
 	//移動制限stop
 	Vec2 kawazPosition = _player->getPosition();
 	auto winSize = Director::getInstance()->getWinSize();
-
-	if (kawazPosition.x <= 0)
-	{
-		_velocity.x = 0;
-		_player->setPositionX(0);
-	}
-	else if (kawazPosition.x >= winSize.width)
-	{
-		_velocity.x = 0;
-		_player->setPositionX(winSize.width);
-	}
+	if (_state == GameState::PLAYING){
+		if (kawazPosition.x <= 0)
+		{
+			_velocity.x = 0;
+			_player->setPositionX(0);
+		}
+		else if (kawazPosition.x >= winSize.width)
+		{
+			_velocity.x = 0;
+			_player->setPositionX(winSize.width);
+		}
 
 	if (kawazPosition.y <= 0)
 	{
 		_velocity.y = 0;
+		_cloudFollowVelocity.y = 0;
+		_groundFollowVelocity.y = 0;
+
 		_player->setPositionY(0);
 	}
 	else if (kawazPosition.y >= winSize.height)
 	{
 		_velocity.y = 0;
+		_cloudFollowVelocity.y = 0;
+		_groundFollowVelocity.y = 0;
+
 		_player->setPositionY(winSize.height);
+	}
+
+	Vec2 groundPosition = _ground->getPosition();
+
+	if (groundPosition.y <= -32)
+	{
+		_cloudFollowVelocity.y = 0;
+		_groundFollowVelocity.y = 0;
+		_ground->setPositionY(-32);
+	}
+	else if (groundPosition.y >= 0)
+	{
+		_cloudFollowVelocity.y = 0;
+		_groundFollowVelocity.y = 0;
+		_ground->setPositionY(0);
+	}
 	}
 
 	if (_state == GameState::PLAYING){
@@ -112,9 +152,6 @@ void MainScene::update(float dt) {
 		}
 
 	}
-
-	//アホみたいに重い
-	_stage->drawGround(-32 + _player->getPositionY() / 8);
 
 
 
@@ -167,6 +204,9 @@ void MainScene::update(float dt) {
 					deletedEnemys.pushBack(zako);
 				}
 				this->removeChild(zako);
+				Enemy* zakoBusted = explosion();
+				zakoBusted->setPosition(zako->getPosition());
+				this->addChild(zakoBusted);
 				enemyBusted++;
 
 				_score += 100;
@@ -197,6 +237,9 @@ void MainScene::update(float dt) {
 						deletedEnemys.pushBack(rare);
 					}
 					this->removeChild(rare);
+					Enemy* rareBusted = explosion();
+					rareBusted->setPosition(rare->getPosition());
+					this->addChild(rareBusted);
 					//log("checkSize %d", deletedEnemys.size());
 					_score += 500;
 					_score *= 5;
@@ -219,6 +262,23 @@ void MainScene::update(float dt) {
 
 		}
 	}
+	if (_state == GameState::RESULT){
+		for (Enemy * rare : _rare) { // for-loopでbulletを1つずつ見ていく
+			if (!deletedEnemys.contains(rare)){
+				deletedEnemys.pushBack(rare);
+			}
+			this->removeChild(rare);
+
+		}
+		for (Enemy * zako : _zako) { // for-loopでbulletを1つずつ見ていく
+			if (!deletedEnemys.contains(zako)){
+				deletedEnemys.pushBack(zako);
+			}
+			this->removeChild(zako);
+
+		}
+	}
+
 	//log("check_bullets %d", _bullets.size());
 	for (Bullet * bullet : deletedBullets) { // 今度は消す予定リストを1つずつ見て行って
 		_bullets.eraseObject(bullet); // 1つずつ_bulletsから消していく
@@ -238,23 +298,38 @@ void MainScene::update(float dt) {
 
 }
 
+Enemy* MainScene::explosion()
+{
+	//Enemyクラスのポインタ変数explosionを作る
+	Enemy *explosion = enemyExplosion::create();
+	//取得したexplosionのテクスチャに対して設定を与えている
+	explosion->getTexture()->setAliasTexParameters();
+	//enemyの表示サイズを2倍にする
+	explosion->setScale(3.0f);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/explode_se.wav");
+
+	//戻り値にexplosionを返す
+	return explosion;
+
+}
+
 void MainScene::onEnterTransitionDidFinish()
 {
 	Layer::onEnterTransitionDidFinish();
 	auto soundEngine = CocosDenshion::SimpleAudioEngine::getInstance();
 	soundEngine->preloadBackgroundMusic("sounds/main_bgm.wav");
-	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/main_bgm.wav", true);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/main_bgm.mp3", true);
 }
 
 void MainScene::onResult(){
 	_state = GameState::RESULT;
 	auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "arial", 32);
-	scoreLabel->setPosition(Vec2(320, 400));
+	scoreLabel->setPosition(Vec2(320, 320));
 	this->setScoreLabel(scoreLabel);
 	this->addChild(_scoreLabel);
 
 	auto scoreHeader = Label::createWithSystemFont("Score", "arial", 32);
-	scoreHeader->setPosition(Vec2(320, 460));
+	scoreHeader->setPosition(Vec2(320, 360));
 	this->addChild(scoreHeader);
 
 	auto replay_normal = Sprite::create("graphic/replay.png");
@@ -263,7 +338,7 @@ void MainScene::onResult(){
 	auto title_press = Sprite::create("graphic/title_press.png");
 
 	//リプレイボタンのstop
-	auto replayButton = MenuItemSprite::create(replay_normal, replay_press , [](Ref* ref)
+	auto replayButton = MenuItemSprite::create(replay_normal, replay_press, [](Ref* ref)
 	{
 		auto scene = MainScene::createScene();
 		Director::getInstance()->replaceScene(scene);
@@ -290,9 +365,47 @@ void MainScene::onResult(){
 	auto menu = Menu::create(replayButton, titleButton, NULL);
 	//ボタンを縦に並べる
 	menu->alignItemsVerticallyWithPadding(15);
-	menu->setPosition(Vec2(320, 240));
+	menu->setPosition(Vec2(320, 200));
 
 	this->addChild(menu);
+
+	auto endMove = Sequence::create(
+		MoveBy::create(0.5, Vec2(-16, -16)),
+		MoveBy::create(0.5, Vec2(-8, -16)),
+		MoveBy::create(0.25, Vec2(160, 32)),
+		MoveBy::create(0.25, Vec2(160, 64)),
+		MoveBy::create(0.25, Vec2(180, 64)),
+		MoveBy::create(0.25, Vec2(240, 64)),
+		NULL);
+
+	auto flyAway = Sequence::create(
+		MoveBy::create(1, Vec2(0, 8)),
+		MoveBy::create(0.25, Vec2(0, -16)),
+		MoveBy::create(0.25, Vec2(0, -32)),
+		MoveBy::create(0.25, Vec2(0, -64)),
+		MoveBy::create(0.25, Vec2(0, -128)),
+		NULL);
+	auto flyAway2 = Sequence::create(
+		MoveBy::create(1, Vec2(0, 8)),
+		MoveBy::create(0.25, Vec2(0, -16)),
+		MoveBy::create(0.25, Vec2(0, -32)),
+		MoveBy::create(0.25, Vec2(0, -64)),
+		MoveBy::create(0.25, Vec2(0, -128)),
+		MoveBy::create(0.5, Vec2(0, -128)),
+		MoveBy::create(0.25, Vec2(0, -32)),
+		NULL);
+	auto flyAway3 = Sequence::create(
+		MoveBy::create(1, Vec2(0, 8)),
+		MoveBy::create(0.25, Vec2(0, -16)),
+		MoveBy::create(0.25, Vec2(0, -32)),
+		MoveBy::create(0.25, Vec2(0, -64)),
+		MoveBy::create(0.25, Vec2(0, -128)),
+		NULL);
+
+	_player->runAction(endMove);
+	_ground->runAction(flyAway);
+	_cloud->runAction(flyAway2);
+	_stage->runAction(flyAway3);
 }
 // tlue falseをとるboolという型のMainSceneクラスのinitという関数を作る
 bool MainScene::init()
@@ -302,13 +415,29 @@ bool MainScene::init()
 	{
 		return false;
 	}
+	auto backgroundColor = LayerColor::create(Color4B(127, 159, 191, 255), 640, 480);
 
+	this->addChild(backgroundColor);
 	//Stageクラスのポインタ変数stageを作る
 	auto stage = Stage::create();
 	//MainSceneの子にstageを加える
 	this->addChild(stage);
 	//MainSceneで_stageにstageをセットする
 	this->setStage(stage);
+
+	//Stageクラスのポインタ変数stageを作る
+	auto cloud = Cloud::create();
+	//MainSceneの子にstageを加える
+	this->addChild(cloud);
+	//MainSceneで_stageにstageをセットする
+	this->setCloud(cloud);
+
+	//Stageクラスのポインタ変数stageを作る
+	auto ground = Ground::create();
+	//MainSceneの子にstageを加える
+	this->addChild(ground);
+	//MainSceneで_stageにstageをセットする
+	this->setGround(ground);
 
 
 	auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "arial", 16);
@@ -333,8 +462,7 @@ bool MainScene::init()
 	//Playerクラスのポインタ変数kawaztanを作る
 	auto kawaztan = Player::create();
 	//kawaztanをX64,Y240の位置にセットする
-	kawaztan->setPosition(Vec2(64, 240));
-
+	kawaztan->setPosition(Vec2(64, 280));
 
 	//MainSceneの子にkawaztanを加える
 	this->addChild(kawaztan);
@@ -345,6 +473,7 @@ bool MainScene::init()
 	//kawaztanの表示サイズを2倍にする
 	kawaztan->setScale(2.0f);
 
+	
 		//cocos2d::EventListenerKeyboard型のポインタ変数keyboardListenerを宣言し、EventListenerKeyboard::createを代入
 		auto keyboardListener = EventListenerKeyboard::create();
 		//キーボードが押された時のstopを書く関数？
@@ -357,8 +486,6 @@ bool MainScene::init()
 						Bullet *bullet = _player->shoot();
 						this->addChild(bullet);
 						_bullets.pushBack(bullet);
-
-
 				}
 
 
@@ -380,6 +507,8 @@ bool MainScene::init()
 
 					//Y方向の速度を1にする
 					_velocity.y = 1;
+					_cloudFollowVelocity.y = -1;
+					_groundFollowVelocity.y = -1;
 
 					//playAnimation(int index)の変数indexに1を代入
 					//上方向へのアニメーションを再生
@@ -390,6 +519,9 @@ bool MainScene::init()
 				else if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW || keyCode == EventKeyboard::KeyCode::KEY_S) {
 					//Y方向の速度を-1にする
 					_velocity.y = -1;
+					_cloudFollowVelocity.y = 1;
+					_groundFollowVelocity.y = 1;
+
 					//playAnimation(int index)の変数indexに2を代入
 					//下方向へのアニメーションを再生
 					_player->playAnimation(2);
@@ -409,6 +541,9 @@ bool MainScene::init()
 			{
 				//X方向の速度を0に戻す
 				_velocity.y = 0.0f;
+				_cloudFollowVelocity.y = 0;
+				_groundFollowVelocity.y = 0;
+
 				//playAnimation(int index)の変数indexに0を代入
 				//アニメーションを待機、横移動のものへ戻す
 				_player->playAnimation(0);

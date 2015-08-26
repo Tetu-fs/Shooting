@@ -83,3 +83,33 @@ bool Enemy::init(){
 	//返り値にtrueを返す
 	return true;
 }
+
+bool enemyExplosion::init()
+{
+
+	if (!Sprite::initWithFile("graphic/explosion_animate.png"))
+	{
+		//返り値にfalseを返す
+		return false;
+	}
+	const int ExpFRAME_COUNT = 6;
+	// cocos2d::Size型のZakoframeSize変数で表示する弾のスプライトのサイズを指定？
+	//詳細は上部frameSizeにて
+	auto explosionFrameSize = Size(16.0, 16.0);
+
+	//playAnimation(int index)とアニメーションの切り替えがない以外は同じ
+	this->setTextureRect(Rect(0, 0, explosionFrameSize.width, explosionFrameSize.height));
+	Vector<SpriteFrame*> explosionFrames;
+	for (int j = 0; j < ExpFRAME_COUNT; ++j)
+	{
+		auto explpsionFrame = SpriteFrame::create("graphic/explosion_animate.png", Rect(explosionFrameSize.width * j, 0, explosionFrameSize.width, explosionFrameSize.height));
+		explosionFrames.pushBack(explpsionFrame);
+	}
+
+	auto explosionAnimation = Animation::createWithSpriteFrames(explosionFrames);
+	explosionAnimation->setDelayPerUnit(0.05);
+	auto explosionAnimate =Animate::create(explosionAnimation);
+	this->runAction(Sequence::create(explosionAnimate, RemoveSelf::create(true), NULL));
+
+	return true;
+}
